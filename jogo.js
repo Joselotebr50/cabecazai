@@ -92,22 +92,42 @@ function aplicarPlaca(visual){
              (positivo) do topo do corpo. Padrão 0.
    ============================================================ */
 const AJUSTES = {
-  gato:       { escala: 1.05, cabeca: 1.60 },
-  cachorro:   { escala: 1.15, cabeca: 1.45 },
+  /* Casa */
+  gato:       { escala: 1.05, cabeca: 1.60, ajusteY: 2 },
+  cachorro:   { escala: 1.15, cabeca: 1.45, ajusteY: 2 },
+  coelho:     { escala: 1.00, cabeca: 1.45, ajusteY: 2 },
+  passarinho: { escala: 1.00, cabeca: 1.15, ajusteY: 1 },
   peixinho:   { escala: 1.45, cabeca: 1.15, ajusteY: 3 },
-  vaca:       { escala: 1.00, cabeca: 1.45 },
-  galinha:    { escala: 1.00, cabeca: 1.00 },
-  pato:       { escala: 1.00, cabeca: 1.15 },
+  hamster:    { escala: 1.00, cabeca: 1.45, ajusteY: 2 },
+  /* Fazenda */
+  vaca:       { escala: 1.00, cabeca: 1.45, ajusteY: 2 },
+  porco:      { escala: 1.00, cabeca: 1.30, ajusteY: 2 },
+  ovelha:     { escala: 1.00, cabeca: 1.30, ajusteY: 2 },
+  galinha:    { escala: 1.00, cabeca: 1.00, ajusteY: 1 },
+  cavalo:     { escala: 1.15, cabeca: 1.60, ajusteY: 3 },
+  pato:       { escala: 1.00, cabeca: 1.15, ajusteY: 1 },
+  /* Selva */
   leao:       { escala: 1.15, cabeca: 1.90, ajusteY: 2 },
-  macaco:     { escala: 1.00, cabeca: 1.45 },
-  sapo:       { escala: 1.00, cabeca: 1.30 },
+  elefante:   { escala: 1.00, cabeca: 1.60, ajusteY: 3 },
+  macaco:     { escala: 1.00, cabeca: 1.45, ajusteY: 2 },
+  tigre:      { escala: 1.15, cabeca: 1.60, ajusteY: 2 },
+  panda:      { escala: 1.00, cabeca: 1.45, ajusteY: 2 },
+  /* Água */
+  sapo:       { escala: 1.00, cabeca: 1.30, ajusteY: 3 },
   golfinho:   { escala: 1.45, cabeca: 1.75, ajusteY: 1 },
   baleia:     { escala: 1.30, cabeca: 1.60, ajusteY: 1 },
-  pinguim:    { escala: 1.00, cabeca: 1.15 },
+  pinguim:    { escala: 1.00, cabeca: 1.15, ajusteY: 2 },
+  tartaruga:  { escala: 1.00, cabeca: 1.15, ajusteY: 4 },
+  /* Brasil */
   onca:       { escala: 1.15, cabeca: 1.45, ajusteY: 2 },
   arara:      { escala: 1.15, cabeca: 1.75, ajusteY: 2 },
-  jacare:     { escala: 1.00, cabeca: 1.60, ajusteY: 2 },
-  trex:       { escala: 1.15, cabeca: 1.75, ajusteY: 2 }
+  preguiça:   { escala: 1.00, cabeca: 1.30, ajusteY: 3 },
+  jacare:     { escala: 1.00, cabeca: 1.60, ajusteY: 3 },
+  /* Fantástico */
+  trex:       { escala: 1.15, cabeca: 1.75, ajusteY: 2 },
+  bronto:     { escala: 1.15, cabeca: 1.60, ajusteY: 3 },
+  dragao:     { escala: 1.15, cabeca: 1.60, ajusteY: 2 },
+  unicornio:  { escala: 1.15, cabeca: 1.60, ajusteY: 3 }
 };
 
 function ajusteDe(id){

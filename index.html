@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#1f6f9c">
+<title>Cabeça de Animais 🐾</title>
+<meta name="description" content="Jogo educativo para crianças aprenderem os animais em português.">
+
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cabeça">
+<link rel="apple-touch-icon" href="icones/icone-192.png">
+<link rel="icon" type="image/png" href="icones/icone-192.png">
+<link rel="stylesheet" href="estilo.css?v=3">
+</head>
+<body>
+<div class="app">
+
+  <section id="telaMenu" class="tela">
+    <div class="menu-hero">
+      <div class="logo">🐾</div>
+      <h1>Cabeça de Animais</h1>
+      <p>Dê cabeça para os bichinhos!</p>
+    </div>
+    <div class="menu-acoes">
+      <button id="btnJogar" class="btn-grande">▶️ Jogar</button>
+      <button id="btnEscolher" class="btn-grande btn-sec">🗺️ Escolher Fase</button>
+      <button id="btnCria" class="btn-grande btn-sec">🎨 Cria seu bicho</button>
+      <button id="btnTutorial" class="btn-grande btn-sec">❓ Como jogar</button>
+      <button id="btnTrocarPerfil" class="btn-perfil">
+        <span id="perfilAvatar">🐱</span>
+        <span id="perfilNome">Jogador 1</span>
+        <span class="trocar">trocar</span>
+      </button>
+    </div>
+    <div class="menu-rodape">
+      <button id="btnSomMenu" class="icon-btn" aria-label="Ligar ou desligar som">🔊</button>
+      <button id="btnTelaCheia" class="icon-btn" aria-label="Tela cheia">⛶</button>
+      <button id="btnZerar" class="btn-mini">Zerar progresso</button>
+    </div>
+  </section>
+
+  <section id="telaMapa" class="tela hidden">
+    <header class="topbar">
+      <button id="btnMapaVoltar" class="icon-btn" aria-label="Voltar">←</button>
+      <h2>Escolha a Fase</h2>
+      <div class="spacer"></div>
+    </header>
+    <div id="gridFases" class="grid-fases"></div>
+  </section>
+
+  <section id="telaPerfis" class="tela hidden">
+    <header class="topbar">
+      <button id="btnPerfisVoltar" class="icon-btn" aria-label="Voltar">←</button>
+      <h2>Quem está jogando?</h2>
+      <div class="spacer"></div>
+    </header>
+    <div id="gridPerfis" class="grid-perfis"></div>
+  </section>
+
+  <section id="telaCria" class="tela hidden">
+    <header class="topbar">
+      <button id="btnCriaVoltar" class="icon-btn" aria-label="Voltar">←</button>
+      <h2>Cria seu bicho</h2>
+      <button id="btnCriaOuvir" class="icon-btn" aria-label="Ouvir">🔊</button>
+    </header>
+    <div id="criaStage">
+      <div id="criaBody"></div>
+      <div id="criaHead"></div>
+    </div>
+    <div class="cria-controles">
+      <button id="btnTrocaCorpo" class="btn-cria">🔄 Corpo</button>
+      <button id="btnSortear" class="btn-cria grande">🎲 Sortear</button>
+      <button id="btnTrocaCabeca" class="btn-cria">🔄 Cabeça</button>
+    </div>
+    <div class="cria-controles">
+      <button id="btnSalvarCriacao" class="btn-cria grande">💾 Salvar bicho</button>
+    </div>
+    <div class="cria-nome" id="criaNome">—</div>
+    <div id="criaGaleria" class="cria-galeria"></div>
+  </section>
+
+  <section id="telaTutorial" class="tela hidden">
+    <header class="topbar">
+      <button id="btnTutorialVoltar" class="icon-btn" aria-label="Voltar">←</button>
+      <h2>Como jogar</h2>
+      <div class="spacer"></div>
+    </header>
+    <div class="tutorial-passos">
+      <div class="tutorial-passo">
+        <div class="tutorial-emoji">👀</div>
+        <div class="tutorial-texto">
+          <strong>Veja o corpo</strong>
+          <p>Um bichinho aparece sem cabeça. Olhe o corpo e tente adivinhar qual é!</p>
+        </div>
+      </div>
+      <div class="tutorial-passo">
+        <div class="tutorial-emoji">🖐️</div>
+        <div class="tutorial-texto">
+          <strong>Arraste a cabeça</strong>
+          <p>Toque e arraste a cabeça certa até o corpo. Também pode tocar na cabeça para escolher direto!</p>
+        </div>
+      </div>
+      <div class="tutorial-passo">
+        <div class="tutorial-emoji">⌨</div>
+        <div class="tutorial-texto">
+          <strong>Use o teclado</strong>
+          <p>Aperte Tab para mudar de cabeça e Enter para escolher. Funciona em computadores também!</p>
+        </div>
+      </div>
+      <div class="tutorial-passo">
+        <div class="tutorial-emoji">⭐</div>
+        <div class="tutorial-texto">
+          <strong>Ganhe estrelas</strong>
+          <p>Acerte sem errar e ganhe 3 estrelas! Complete todas as fases para virar Mestre dos Bichinhos!</p>
+        </div>
+      </div>
+      <div class="tutorial-passo">
+        <div class="tutorial-emoji">🔥</div>
+        <div class="tutorial-texto">
+          <strong>Combo!</strong>
+          <p>Acerte seguidas vezes para criar combos e ganhar mais pontos. Errar zera o combo!</p>
+        </div>
+      </div>
+      <div class="tutorial-passo">
+        <div class="tutorial-emoji">🎨</div>
+        <div class="tutorial-texto">
+          <strong>Crie seu bicho</strong>
+          <p>No menu "Cria seu bicho", misture cabeças e corpos diferentes para criar bichos engraçados!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="telaJogo" class="tela hidden">
+    <div id="stage">
+      <div id="decor" aria-hidden="true"></div>
+      <div class="target" aria-hidden="true"></div>
+      <div id="baseWrap" aria-hidden="true"></div>
+      <div id="bodyWrap"></div>
+      <div id="heads"></div>
+
+      <header class="topbar placa" id="topbarJogo">
+        <button id="btnJogoVoltar" class="icon-btn" aria-label="Voltar">←</button>
+        <h2 id="jogoTitulo">FASE 1 • CASA I</h2>
+        <button id="btnReiniciarFase" class="icon-btn" aria-label="Recomeçar fase">🔄</button>
+      </header>
+
+      <div class="pips placa" id="pips"></div>
+
+      <div id="hudJogo">
+        <div class="hud-painel placa" id="hudScore">
+          <span class="hud-icone">⭐</span>
+          <span class="hud-valor" id="scoreText">0</span>
+        </div>
+        <div class="hud-painel placa" id="hudStreak">
+          <span class="hud-icone">🔥</span>
+          <span class="hud-valor" id="streakText">0x</span>
+        </div>
+      </div>
+
+      <div id="nomeLabel" class="placa" aria-live="polite"></div>
+      <div id="toast" role="status"></div>
+      <div id="overlay" class="hidden"></div>
+    </div>
+  </section>
+
+</div>
+
+<script src="audio.js?v=3"></script>
+<script src="jogo.js?v=3"></script>
+<script>
+  if ('serviceWorker' in navigator){
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+    });
+  }
+</script>
+</body>
+</html>

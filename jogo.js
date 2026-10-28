@@ -1,0 +1,1248 @@
+/* ============================================================
+   jogo.js
+   ============================================================ */
+
+const ANIMAIS = {
+  gato:       { emoji:'🐱', nome:'Gato',       cor:'#F2A25C', escuro:'#D9833A', claro:'#FFD9B0', som:'Miau! Miau!',    tipo:'quadrupede', rabo:'longo' },
+  cachorro:   { emoji:'🐶', nome:'Cachorro',   cor:'#C99A66', escuro:'#A87A48', claro:'#EBC9A3', som:'Au au! Au au!',  tipo:'quadrupede', rabo:'longo' },
+  coelho:     { emoji:'🐰', nome:'Coelho',     cor:'#F0E8DF', escuro:'#B4A594', claro:'#FFFFFF', som:'Nhac nhac!',     tipo:'quadrupede', rabo:'curto' },
+  passarinho: { emoji:'🐦', nome:'Passarinho', cor:'#7EC0E8', escuro:'#4A8FBC', claro:'#C8E8F8', som:'Piu piu!',       tipo:'ave' },
+  peixinho:   { emoji:'🐠', nome:'Peixinho',   cor:'#FF8C6B', escuro:'#D5623F', claro:'#FFD1BE', som:'Glub glub!',     tipo:'peixe' },
+  hamster:    { emoji:'🐹', nome:'Hamster',    cor:'#E2B878', escuro:'#B98E4D', claro:'#F8E4B8', som:'Iiii iiii!',     tipo:'quadrupede', rabo:'curto' },
+  vaca:       { emoji:'🐮', nome:'Vaca',       cor:'#F3EEE4', escuro:'#4A4A4A', claro:'#FFFFFF', som:'Muuu! Muuu!',    tipo:'quadrupede', rabo:'longo' },
+  porco:      { emoji:'🐷', nome:'Porco',      cor:'#F5A8C0', escuro:'#DE7F9E', claro:'#FFD3E0', som:'Oinc! Oinc!',    tipo:'quadrupede', rabo:'encaracolado' },
+  ovelha:     { emoji:'🐑', nome:'Ovelha',     cor:'#F0EBE1', escuro:'#C4B9A5', claro:'#FFFFFF', som:'Bééé! Bééé!',    tipo:'quadrupede', rabo:'curto' },
+  galinha:    { emoji:'🐔', nome:'Galinha',    cor:'#FFE9A8', escuro:'#D9B84A', claro:'#FFF5CC', som:'Có có! Có có!',  tipo:'ave' },
+  cavalo:     { emoji:'🐴', nome:'Cavalo',     cor:'#B07A50', escuro:'#8A5A34', claro:'#D8B080', som:'Iii hiii!',      tipo:'quadrupede', rabo:'longo' },
+  pato:       { emoji:'🦆', nome:'Pato',       cor:'#F5E64C', escuro:'#C8B420', claro:'#FFF5A0', som:'Quá quá!',       tipo:'ave' },
+  leao:       { emoji:'🦁', nome:'Leão',       cor:'#E8B84B', escuro:'#C28F2A', claro:'#FFE6A8', som:'Roar!',          tipo:'quadrupede', rabo:'longo' },
+  elefante:   { emoji:'🐘', nome:'Elefante',   cor:'#A0A4B0', escuro:'#70757F', claro:'#C8CCD6', som:'Fuummm!',        tipo:'quadrupede', rabo:'curto' },
+  macaco:     { emoji:'🐵', nome:'Macaco',     cor:'#B08058', escuro:'#8A5F3C', claro:'#D8B088', som:'Uhu uhu ah ah!', tipo:'quadrupede', rabo:'longo' },
+  tigre:      { emoji:'🐯', nome:'Tigre',      cor:'#F0A020', escuro:'#C77800', claro:'#FFD280', som:'Grrr!',          tipo:'quadrupede', rabo:'longo' },
+  panda:      { emoji:'🐼', nome:'Panda',      cor:'#F8F8F8', escuro:'#444444', claro:'#FFFFFF', som:'Nhac nhac!',     tipo:'quadrupede', rabo:'curto' },
+  sapo:       { emoji:'🐸', nome:'Sapo',       cor:'#7BC85C', escuro:'#5AA23C', claro:'#B6E89B', som:'Croac! Croac!',  tipo:'sapo' },
+  golfinho:   { emoji:'🐬', nome:'Golfinho',   cor:'#88C8E8', escuro:'#5090B0', claro:'#C0E4F5', som:'Iii! Iii!',      tipo:'peixe' },
+  baleia:     { emoji:'🐳', nome:'Baleia',     cor:'#6EB0D8', escuro:'#3D80A8', claro:'#A8D8F0', som:'Uuuuuu!',        tipo:'peixe' },
+  pinguim:    { emoji:'🐧', nome:'Pinguim',    cor:'#3A3A3A', escuro:'#111111', claro:'#FFFFFF', som:'Nhonhonho!',     tipo:'ave' },
+  tartaruga:  { emoji:'🐢', nome:'Tartaruga',  cor:'#7CB860', escuro:'#4A8A3A', claro:'#B0DC98', som:'Uuuu!',          tipo:'tartaruga' },
+  onca:       { emoji:'🐆', nome:'Onça',       cor:'#E8C060', escuro:'#A07830', claro:'#FFF0C8', som:'Grrr! Grrr!',    tipo:'quadrupede', rabo:'longo', pintas:true },
+  arara:      { emoji:'🦜', nome:'Arara',      cor:'#E05050', escuro:'#A02828', claro:'#FFD0B0', som:'Crá! Crá!',      tipo:'ave',       bico:'forte' },
+  preguiça:   { emoji:'🦥', nome:'Preguiça',   cor:'#A08060', escuro:'#705840', claro:'#D8C0A8', som:'Uuuuu!',         tipo:'quadrupede', rabo:'curto' },
+  jacare:     { emoji:'🐊', nome:'Jacaré',     cor:'#508050', escuro:'#305030', claro:'#90B090', som:'Grrr!',          tipo:'sapo',      escamas:true },
+  trex:       { emoji:'🦖', nome:'T-Rex',      cor:'#6A9A50', escuro:'#3A6030', claro:'#A8D090', som:'ROAR!',          tipo:'quadrupede', rabo:'longo' },
+  bronto:     { emoji:'🦕', nome:'Brontossauro',cor:'#8090A0',escuro:'#506070', claro:'#C0D0E0', som:'Uuuuu!',         tipo:'quadrupede', rabo:'longo' },
+  dragao:     { emoji:'🐉', nome:'Dragão',     cor:'#C04040', escuro:'#802020', claro:'#FFB0B0', som:'Fuuuu!',         tipo:'dragao',    rabo:'longo' },
+  unicornio:  { emoji:'🦄', nome:'Unicórnio',  cor:'#E8B0D0', escuro:'#A878A0', claro:'#FFE0F0', som:'Ihhh!',          tipo:'quadrupede', rabo:'longo' }
+};
+const TODOS = Object.keys(ANIMAIS);
+const BICHOS_BR = ['onca','arara','preguiça','jacare'];
+const BICHOS_FANTASTICOS = ['trex','bronto','dragao','unicornio'];
+
+const TEMAS = {
+  casa:    { fundo:'linear-gradient(180deg,#c8e8ff 0%,#e0f0ff 42%,#d8f0b8 100%)' },
+  fazenda: { fundo:'linear-gradient(180deg,#bfe6ff 0%,#e0f0c8 42%,#b8e090 100%)' },
+  selva:   { fundo:'linear-gradient(180deg,#3a7a30 0%,#6aa85a 45%,#88c878 100%)' },
+  agua:    { fundo:'linear-gradient(180deg,#bce8ff 0%,#7ec8e8 45%,#3a90c0 100%)' },
+  rainbow: { fundo:'linear-gradient(180deg,#ffd0e8 0%,#fff0a8 45%,#d0e8ff 100%)' },
+  trofeu:  { fundo:'linear-gradient(180deg,#ffe9a8 0%,#ffd060 50%,#e8a020 100%)' },
+  brasil:  { fundo:'linear-gradient(180deg,#4aa848 0%,#88c070 45%,#e8d060 100%)' },
+  fantasia:{ fundo:'linear-gradient(180deg,#5a3080 0%,#9050c0 45%,#e0a0e8 100%)' }
+};
+
+const CONFETE_TEMA = {
+  casa:     ['🏠','🌷','💛','🌻','⭐','✨'],
+  fazenda:  ['🌾','🌻','🚜','🍀','⭐','🐴'],
+  selva:    ['🍃','🌿','🍂','🦋','⭐','🐒'],
+  agua:     ['🫧','💧','🐚','🐠','⭐','🌊'],
+  rainbow:  ['🌈','✨','🎈','💖','⭐','🎉'],
+  trofeu:   ['🏆','👑','🥇','✨','⭐','🎖️'],
+  brasil:   ['🦜','🌺','🌿','🥥','⭐','💚'],
+  fantasia: ['⭐','✨','💫','🌟','🔮','🪄']
+};
+
+const FASES = [
+  { tema:'Casa I',         visual:'casa',     emoji:'🏡', animais:['gato','cachorro','coelho','passarinho'],                        opcoes:3, acertos:4 },
+  { tema:'Casa II',        visual:'casa',     emoji:'🏠', animais:['gato','cachorro','coelho','passarinho','peixinho','hamster'],  opcoes:3, acertos:4 },
+  { tema:'Fazenda I',      visual:'fazenda',  emoji:'🚜', animais:['vaca','porco','ovelha','galinha'],                             opcoes:3, acertos:5 },
+  { tema:'Fazenda II',     visual:'fazenda',  emoji:'🌾', animais:['vaca','porco','ovelha','galinha','cavalo','pato'],              opcoes:4, acertos:5 },
+  { tema:'Selva',          visual:'selva',    emoji:'🌴', animais:['leao','elefante','macaco','tigre','panda'],                    opcoes:4, acertos:5 },
+  { tema:'Água',           visual:'agua',     emoji:'🌊', animais:['sapo','golfinho','baleia','pinguim','tartaruga'],               opcoes:4, acertos:5 },
+  { tema:'Tudo Junto!',    visual:'rainbow',  emoji:'🌈', animais: TODOS.slice(0,22),                                              opcoes:4, acertos:6 },
+  { tema:'Desafio Final',  visual:'trofeu',   emoji:'🏆', animais: TODOS.slice(0,22),                                              opcoes:5, acertos:6 },
+  { tema:'Brasil',         visual:'brasil',   emoji:'🇧🇷', animais: BICHOS_BR,                                                       opcoes:3, acertos:4 },
+  { tema:'Fantástico',     visual:'fantasia', emoji:'🦄', animais: BICHOS_FANTASTICOS,                                               opcoes:4, acertos:5 }
+];
+
+/* ============================================================
+   PLACA — troca o border-image-source pelo tema da fase
+   ============================================================ */
+function aplicarPlaca(visual){
+  const src = `url('placas/${visual}.png')`;
+  document.querySelectorAll('.placa').forEach(el => {
+    el.style.borderImageSource = src;
+  });
+}
+
+/* ============================================================
+   AJUSTES FINOS POR BICHO
+   ------------------------------------------------------------
+   escala  = tamanho do CORPO   (1 = normal)
+   cabeca  = tamanho da CABEÇA  (1.15 = padrão)
+   ajusteY = empurrar a cabeça pra cima (negativo) ou baixo
+             (positivo) do topo do corpo. Padrão 0.
+   ============================================================ */
+const AJUSTES = {
+  gato:       { escala: 1.05, cabeca: 1.60 },
+  cachorro:   { escala: 1.15, cabeca: 1.45 },
+  peixinho:   { escala: 1.45, cabeca: 1.15, ajusteY: 3 },
+  vaca:       { escala: 1.00, cabeca: 1.45 },
+  galinha:    { escala: 1.00, cabeca: 1.00 },
+  pato:       { escala: 1.00, cabeca: 1.15 },
+  leao:       { escala: 1.15, cabeca: 1.90, ajusteY: 2 },
+  macaco:     { escala: 1.00, cabeca: 1.45 },
+  sapo:       { escala: 1.00, cabeca: 1.30 },
+  golfinho:   { escala: 1.45, cabeca: 1.75, ajusteY: 1 },
+  baleia:     { escala: 1.30, cabeca: 1.60, ajusteY: 1 },
+  pinguim:    { escala: 1.00, cabeca: 1.15 },
+  onca:       { escala: 1.15, cabeca: 1.45, ajusteY: 2 },
+  arara:      { escala: 1.15, cabeca: 1.75, ajusteY: 2 },
+  jacare:     { escala: 1.00, cabeca: 1.60, ajusteY: 2 },
+  trex:       { escala: 1.15, cabeca: 1.75, ajusteY: 2 }
+};
+
+function ajusteDe(id){
+  return AJUSTES[id] || {};
+}
+
+const POSICOES = {
+  3: [{ x:16.2, y:37.5 }, { x:83.8, y:37.5 }, { x:50.0, y:70.3 }],
+  4: [{ x:16.2, y:37.5 }, { x:83.8, y:37.5 }, { x:12.0, y:54.7 }, { x:88.0, y:54.7 }],
+  5: [{ x:16.2, y:37.5 }, { x:83.8, y:37.5 }, { x:12.0, y:54.7 }, { x:88.0, y:54.7 }, { x:50.0, y:70.3 }]
+};
+const ALVO = { x:50, y:43.2 };
+
+const STORAGE_PERFIS = 'cabecaAnimais.perfis.v2';
+const STORAGE_ANTIGO = 'cabecaAnimais.progresso.v1';
+const AVATARES = ['🐱','🐶','🐰','🦁','🐼','🦊','🐸','🐵'];
+const PONTOS_POR_ACERTO = 10;
+
+/* ---------- CONQUISTAS ---------- */
+const CONQUISTAS = [
+  { id:'primeiro_acerto',  emoji:'🌟', nome:'Primeiro Acerto',    desc:'Acertou pela primeira vez!' },
+  { id:'combo5',           emoji:'🔥', nome:'Combo 5',            desc:'5 acertos seguidos!' },
+  { id:'combo10',          emoji:'💥', nome:'Combo 10',           desc:'10 acertos seguidos!' },
+  { id:'fase_perfeita',    emoji:'💎', nome:'Fase Perfeita',      desc:'Completou uma fase sem erros!' },
+  { id:'todas_fases',      emoji:'🏆', nome:'Mestre',             desc:'Completou todas as fases!' },
+  { id:'100_pontos',       emoji:'💯', nome:'100 Pontos',         desc:'Chegou a 100 pontos!' },
+  { id:'500_pontos',       emoji:'🤑', nome:'500 Pontos',         desc:'Chegou a 500 pontos!' },
+  { id:'criador',          emoji:'🎨', nome:'Criador',            desc:'Criou seu primeiro bicho!' }
+];
+
+function getBadges(perfil){ return perfil.badges || {}; }
+function concederBadge(id){
+  const p = perfilAtual(); if (!p) return false;
+  if (!p.badges) p.badges = {};
+  if (p.badges[id]) return false;
+  p.badges[id] = Date.now();
+  salvarPerfis();
+  const c = CONQUISTAS.find(q => q.id === id);
+  if (c) mostrarToast(`${c.emoji} Conquista: ${c.nome}!`);
+  return true;
+}
+function verificarConquistas(streakAtual, errosFase, pontosAtual){
+  if (pontosAtual >= 10) concederBadge('primeiro_acerto');
+  if (streakAtual >= 5) concederBadge('combo5');
+  if (streakAtual >= 10) concederBadge('combo10');
+  if (errosFase === 0 && acertos > 0) concederBadge('fase_perfeita');
+  if (pontosAtual >= 100) concederBadge('100_pontos');
+  if (pontosAtual >= 500) concederBadge('500_pontos');
+  const p = perfilAtual();
+  if (p && p.maxFase > FASES.length) concederBadge('todas_fases');
+}
+
+let dados = { atual:null, perfis:{} };
+
+function carregarPerfis(){
+  try{
+    const raw = localStorage.getItem(STORAGE_PERFIS);
+    if (raw){
+      const o = JSON.parse(raw);
+      if (o && typeof o === 'object' && o.perfis && typeof o.perfis === 'object'){
+        dados = { atual: o.atual || null, perfis: o.perfis };
+      }
+    }
+  }catch(e){}
+  if (Object.keys(dados.perfis).length === 0){
+    let antigo = null;
+    try{
+      const r = localStorage.getItem(STORAGE_ANTIGO);
+      if (r) antigo = JSON.parse(r);
+    }catch(e){}
+    const id = 'p' + Date.now();
+    dados.perfis[id] = {
+      nome: 'Jogador 1', avatar: '🐱',
+      maxFase: (antigo && antigo.maxFase) || 1,
+      estrelas: (antigo && antigo.estrelas) || {},
+      pontos: 0
+    };
+    dados.atual = id;
+    salvarPerfis();
+  }
+  if (!dados.perfis[dados.atual]) dados.atual = Object.keys(dados.perfis)[0] || null;
+  Object.keys(dados.perfis).forEach(id => {
+    if (typeof dados.perfis[id].pontos !== 'number') dados.perfis[id].pontos = 0;
+    if (!dados.perfis[id].badges) dados.perfis[id].badges = {};
+  });
+}
+function salvarPerfis(){ try{ localStorage.setItem(STORAGE_PERFIS, JSON.stringify(dados)); }catch(e){} }
+function perfilAtual(){ return dados.perfis[dados.atual] || null; }
+function getPontos(){ const p = perfilAtual(); return (p && typeof p.pontos === 'number') ? p.pontos : 0; }
+function setPontos(n){ const p = perfilAtual(); if (p){ p.pontos = n; salvarPerfis(); } }
+function criarPerfil(nome, avatar){
+  if (Object.keys(dados.perfis).length >= 4) return null;
+  const id = 'p' + Date.now();
+  dados.perfis[id] = { nome: nome.trim() || 'Jogador', avatar: avatar || '🐱', maxFase: 1, estrelas: {}, pontos: 0, badges: {} };
+  dados.atual = id;
+  salvarPerfis();
+  return id;
+}
+function apagarPerfil(id){
+  if (Object.keys(dados.perfis).length <= 1) return false;
+  delete dados.perfis[id];
+  if (dados.atual === id) dados.atual = Object.keys(dados.perfis)[0];
+  salvarPerfis();
+  return true;
+}
+function trocarPerfil(id){ if (dados.perfis[id]){ dados.atual = id; salvarPerfis(); } }
+
+const telaMenu   = document.getElementById('telaMenu');
+const telaMapa   = document.getElementById('telaMapa');
+const telaPerfis = document.getElementById('telaPerfis');
+const telaCria   = document.getElementById('telaCria');
+const telaTutorial = document.getElementById('telaTutorial');
+const telaJogo   = document.getElementById('telaJogo');
+const gridFases  = document.getElementById('gridFases');
+const gridPerfis = document.getElementById('gridPerfis');
+const jogoTitulo = document.getElementById('jogoTitulo');
+const stage      = document.getElementById('stage');
+const decor      = document.getElementById('decor');
+const headsEl    = document.getElementById('heads');
+const baseWrap   = document.getElementById('baseWrap');
+const bodyWrap   = document.getElementById('bodyWrap');
+const toastEl    = document.getElementById('toast');
+const nomeLabel  = document.getElementById('nomeLabel');
+const pipsEl     = document.getElementById('pips');
+const overlay    = document.getElementById('overlay');
+const btnSomMenu = document.getElementById('btnSomMenu');
+const perfilAvatar = document.getElementById('perfilAvatar');
+const perfilNome = document.getElementById('perfilNome');
+const criaBody   = document.getElementById('criaBody');
+const criaHead   = document.getElementById('criaHead');
+const criaNome   = document.getElementById('criaNome');
+const criaGaleria = document.getElementById('criaGaleria');
+const scoreTextEl = document.getElementById('scoreText');
+const streakTextEl = document.getElementById('streakText');
+const hudStreakEl = document.getElementById('hudStreak');
+
+let faseAtual = null;
+let acertos = 0, erros = 0;
+let streak = 0;
+let atual = null, ultimoId = null, travado = false;
+
+const rand = n => Math.floor(Math.random()*n);
+function shuffle(a){ for (let i=a.length-1;i>0;i--){ const j=rand(i+1);[a[i],a[j]]=[a[j],a[i]];} return a; }
+function mostrarTela(q){
+  telaMenu.classList.toggle('hidden', q !== 'menu');
+  telaMapa.classList.toggle('hidden', q !== 'mapa');
+  telaPerfis.classList.toggle('hidden', q !== 'perfis');
+  telaCria.classList.toggle('hidden', q !== 'cria');
+  telaTutorial.classList.toggle('hidden', q !== 'tutorial');
+  telaJogo.classList.toggle('hidden', q !== 'jogo');
+}
+
+function vibrar(padrao){ if ('vibrate' in navigator){ try{ navigator.vibrate(padrao); }catch(e){} } }
+function tentarBloquearRotacao(){
+  try{
+    if (screen.orientation && screen.orientation.lock) screen.orientation.lock('portrait').catch(()=>{});
+  }catch(e){}
+}
+function preloadFase(){
+  if (!faseAtual) return;
+  const v = faseAtual.config.visual;
+  new Image().src = `imagens/base_${v}.png`;
+  new Image().src = `placas/${v}.png`;
+  faseAtual.config.animais.forEach(id => {
+    new Image().src = `imagens/${id}_corpo.png`;
+    new Image().src = `imagens/${id}_cabeca.png`;
+  });
+}
+function preloadProximaFase(){
+  const proxima = faseAtual ? faseAtual.index + 1 : 0;
+  if (!FASES[proxima]) return;
+  setTimeout(() => {
+    const v = FASES[proxima].visual;
+    new Image().src = `imagens/base_${v}.png`;
+    new Image().src = `placas/${v}.png`;
+    FASES[proxima].animais.forEach(id => {
+      new Image().src = `imagens/${id}_corpo.png`;
+      new Image().src = `imagens/${id}_cabeca.png`;
+    });
+  }, 3000);
+}
+
+/* ============================================================
+   ENCAIXE DINÂMICO — cálculo matemático (sem medir layout)
+   ------------------------------------------------------------
+   Usa a proporção natural da imagem. Não depende de timing,
+   então funciona IGUAL em qualquer navegador.
+   ============================================================ */
+function calcularSnapY(){
+  const img = bodyWrap ? bodyWrap.querySelector('img') : null;
+  if (!img || !img.naturalWidth || !img.naturalHeight) return ALVO.y;
+  const sr = stage.getBoundingClientRect();
+  if (sr.height === 0) return ALVO.y;
+
+  /* 1. Largura visual do corpo em px (42% do stage) */
+  const larguraVisualPx = sr.width * 0.42;
+
+  /* 2. Altura visual = largura × proporção natural da imagem */
+  const alturaVisualPx = larguraVisualPx * (img.naturalHeight / img.naturalWidth);
+
+  /* 3. Aplica a escala do bicho */
+  const aj = atual ? ajusteDe(atual.id) : {};
+  const escala = aj.escala || 1;
+  const alturaEscaladaPx = alturaVisualPx * escala;
+
+  /* 4. Centro do corpo está em 55% do stage (mesmo do CSS) */
+  const centroYPx = sr.height * 0.55;
+
+  /* 5. Topo = centro - metade da altura */
+  const topoPx = centroYPx - alturaEscaladaPx / 2;
+
+  /* 6. Converte pra % */
+  const topoPct = (topoPx / sr.height) * 100;
+
+  /* 7. Ajuste fino opcional por bicho */
+  const offset = typeof aj.ajusteY === 'number' ? aj.ajusteY : 0;
+  return topoPct + offset;
+}
+
+function aplicarSnapY(){
+  const y = calcularSnapY();
+  stage.style.setProperty('--snap-y', y + '%');
+  return y;
+}
+
+/* ---------- SVG POR TIPO ---------- */
+function bodySVG(a){
+  const t = a.tipo || 'quadrupede';
+  if (t === 'ave')       return bodyAve(a);
+  if (t === 'peixe')     return bodyPeixe(a);
+  if (t === 'sapo')      return bodySapo(a);
+  if (t === 'tartaruga') return bodyTartaruga(a);
+  if (t === 'dragao')    return bodyDragao(a);
+  return bodyQuadrupede(a);
+}
+
+function bodyQuadrupede(a){
+  const rabo = a.rabo || 'longo';
+  let r;
+  if (rabo === 'encaracolado'){
+    r = `<path d="M95 50 q15 -4 15 -18 q0 -13 -11 -12 q-9 1 -7 9 q2 6 8 4" fill="none" stroke="${a.escuro}" stroke-width="6" stroke-linecap="round" opacity=".95"/>`;
+  } else if (rabo === 'curto'){
+    r = `<circle cx="100" cy="52" r="9" fill="${a.escuro}" opacity=".9"/><circle cx="100" cy="52" r="5" fill="${a.claro}" opacity=".5"/>`;
+  } else {
+    r = `<path d="M97 54 q20 -6 16 -26" fill="none" stroke="${a.escuro}" stroke-width="9" stroke-linecap="round" opacity=".9"/>`;
+  }
+  let extra = '';
+  if (a.pintas){
+    extra = `
+      <circle cx="48" cy="55" r="3.5" fill="${a.escuro}" opacity=".55"/>
+      <circle cx="70" cy="60" r="3.5" fill="${a.escuro}" opacity=".55"/>
+      <circle cx="60" cy="72" r="3" fill="${a.escuro}" opacity=".55"/>
+      <circle cx="80" cy="52" r="3" fill="${a.escuro}" opacity=".55"/>
+      <circle cx="40" cy="70" r="3" fill="${a.escuro}" opacity=".55"/>`;
+  }
+  return `<svg viewBox="0 0 120 112" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse cx="60" cy="101" rx="40" ry="6" fill="#000" opacity=".09"/>${r}
+    <rect x="26" y="72" width="15" height="24" rx="7" fill="${a.escuro}"/>
+    <rect x="46" y="76" width="15" height="20" rx="7" fill="${a.cor}"/>
+    <rect x="66" y="76" width="15" height="20" rx="7" fill="${a.cor}"/>
+    <rect x="84" y="72" width="15" height="24" rx="7" fill="${a.escuro}"/>
+    <ellipse cx="60" cy="60" rx="45" ry="33" fill="${a.cor}" stroke="${a.escuro}" stroke-opacity=".35" stroke-width="3"/>
+    ${extra}
+    <ellipse cx="60" cy="70" rx="28" ry="18" fill="${a.claro}" opacity=".5"/>
+    <ellipse cx="60" cy="30" rx="17" ry="11" fill="${a.cor}" stroke="${a.escuro}" stroke-opacity=".35" stroke-width="3"/>
+  </svg>`;
+}
+
+function bodyAve(a){
+  const bicoForte = a.bico === 'forte';
+  return `<svg viewBox="0 0 120 112" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse cx="60" cy="101" rx="32" ry="5" fill="#000" opacity=".09"/>
+    <path d="M84 66 L104 56 L100 68 L106 78 L86 80 Z" fill="${a.escuro}" opacity=".9"/>
+    <line x1="52" y1="88" x2="52" y2="99" stroke="#E8A030" stroke-width="4" stroke-linecap="round"/>
+    <line x1="68" y1="88" x2="68" y2="99" stroke="#E8A030" stroke-width="4" stroke-linecap="round"/>
+    <path d="M45 99 L52 99 L59 99" fill="none" stroke="#E8A030" stroke-width="3" stroke-linecap="round"/>
+    <path d="M61 99 L68 99 L75 99" fill="none" stroke="#E8A030" stroke-width="3" stroke-linecap="round"/>
+    <ellipse cx="58" cy="62" rx="35" ry="32" fill="${a.cor}" stroke="${a.escuro}" stroke-opacity=".35" stroke-width="3"/>
+    <path d="M38 58 q16 -8 30 10 q-14 10 -30 -10 Z" fill="${a.claro}" opacity=".65"/>
+    <path d="M42 62 q10 -2 18 8" fill="none" stroke="${a.escuro}" stroke-opacity=".35" stroke-width="2" stroke-linecap="round"/>
+    <ellipse cx="58" cy="72" rx="20" ry="14" fill="${a.claro}" opacity=".45"/>
+    <ellipse cx="58" cy="30" rx="15" ry="10" fill="${a.cor}" stroke="${a.escuro}" stroke-opacity=".35" stroke-width="3"/>
+    ${bicoForte ? `<path d="M52 26 L64 30 L52 34 Z" fill="#FFB030" stroke="#C07000" stroke-width="1.5"/>` : ''}
+  </svg>`;
+}
+
+function bodyPeixe(a){
+  return `<svg viewBox="0 0 120 112" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse cx="60" cy="99" rx="30" ry="5" fill="#000" opacity=".09"/>
+    <path d="M94 62 L114 42 L112 62 L114 82 L94 66 Z" fill="${a.escuro}" opacity=".9"/>
+    <path d="M48 30 L60 16 L74 30 Z" fill="${a.escuro}" opacity=".85"/>
+    <ellipse cx="58" cy="62" rx="42" ry="28" fill="${a.cor}" stroke="${a.escuro}" stroke-opacity=".35" stroke-width="3"/>
+    <ellipse cx="58" cy="72" rx="30" ry="14" fill="${a.claro}" opacity=".55"/>
+    <path d="M42 66 q6 12 18 4 q-5 -10 -18 -4 Z" fill="${a.escuro}" opacity=".75"/>
+    <ellipse cx="60" cy="30" rx="14" ry="10" fill="${a.cor}" stroke="${a.escuro}" stroke-opacity=".35" stroke-width="3"/>
+  </svg>`;
+}
+
+function bodySapo(a){
+  const escamas = a.escamas ? `
+    <circle cx="42" cy="66" r="2.5" fill="${a.escuro}" opacity=".5"/>
+    <circle cx="58" cy="72" r="2.5" fill="${a.escuro}" opacity=".5"/>
+    <circle cx="74" cy="66" r="2.5" fill="${a.escuro}" opacity=".5"/>
+    <circle cx="50" cy="80" r="2.5" fill="${a.escuro}" opacity=".5"/>
+    <circle cx="70" cy="80" r="2.5" fill="${a.escuro}" opacity=".5"/>` : '';
+  return `<svg viewBox="0 0 120 112" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse cx="60" cy="101" rx="40" ry="6" fill="#000" opacity=".09"/>
+    <ellipse cx="24" cy="80" rx="17" ry="13" fill="${a.escuro}" opacity=".9"/>
+    <ellipse cx="96" cy="80" rx="17" ry="13" fill="${a.escuro}" opacity=".9"/>
+    <path d="M12 92 q-1 8 6 8 M18 92 q0 8 7 8" fill="none" stroke="${a.escuro}" stroke-width="3" stroke-linecap="round"/>
+    <path d="M95 92 q-1 8 7 8 M101 92 q0 8 7 8" fill="none" stroke="${a.escuro}" stroke-width="3" stroke-linecap="round"/>
+    <rect x="42" y="82" width="9" height="14" rx="4.5" fill="${a.escuro}"/>
+    <rect x="69" y="82" width="9" height="14" rx="4.5" fill="${a.escuro}"/>
+    <ellipse cx="60" cy="68" rx="46" ry="30" fill="${a.cor}" stroke="${a.escuro}" stroke-opacity=".35" stroke-width="3"/>
+    ${escamas}
+    <ellipse cx="60" cy="78" rx="30" ry="14" fill="${a.claro}" opacity=".55"/>
+    <ellipse cx="60" cy="38" rx="16" ry="10" fill="${a.cor}" stroke="${a.escuro}" stroke-opacity=".35" stroke-width="3"/>
+  </svg>`;
+}
+
+function bodyTartaruga(a){
+  return `<svg viewBox="0 0 120 112" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse cx="60" cy="101" rx="40" ry="6" fill="#000" opacity=".09"/>
+    <rect x="16" y="78" width="15" height="18" rx="7.5" fill="${a.escuro}"/>
+    <rect x="42" y="86" width="15" height="14" rx="7.5" fill="${a.escuro}"/>
+    <rect x="63" y="86" width="15" height="14" rx="7.5" fill="${a.escuro}"/>
+    <rect x="89" y="78" width="15" height="18" rx="7.5" fill="${a.escuro}"/>
+    <ellipse cx="60" cy="62" rx="48" ry="34" fill="${a.escuro}"/>
+    <ellipse cx="60" cy="62" rx="42" ry="28" fill="${a.cor}" opacity=".85"/>
+    <path d="M60 40 L60 84 M30 62 L90 62 M40 46 L80 78 M80 46 L40 78" stroke="${a.escuro}" stroke-width="2" opacity=".55" fill="none"/>
+    <ellipse cx="60" cy="62" rx="12" ry="9" fill="${a.claro}" opacity=".55"/>
+    <ellipse cx="60" cy="28" rx="14" ry="10" fill="${a.claro}" stroke="${a.escuro}" stroke-opacity=".35" stroke-width="3"/>
+  </svg>`;
+}
+
+function bodyDragao(a){
+  return `<svg viewBox="0 0 120 112" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse cx="60" cy="101" rx="40" ry="6" fill="#000" opacity=".09"/>
+    <path d="M60 48 L18 12 L30 40 L10 44 L34 56 L40 76 Z" fill="${a.escuro}" opacity=".85"/>
+    <path d="M60 48 L102 12 L90 40 L110 44 L86 56 L80 76 Z" fill="${a.escuro}" opacity=".85"/>
+    <path d="M95 54 L118 40 L114 62 L118 84 L95 66 Z" fill="${a.escuro}" opacity=".9"/>
+    <rect x="26" y="72" width="15" height="24" rx="7" fill="${a.escuro}"/>
+    <rect x="46" y="76" width="15" height="20" rx="7" fill="${a.cor}"/>
+    <rect x="66" y="76" width="15" height="20" rx="7" fill="${a.cor}"/>
+    <rect x="84" y="72" width="15" height="24" rx="7" fill="${a.escuro}"/>
+    <ellipse cx="60" cy="60" rx="45" ry="33" fill="${a.cor}" stroke="${a.escuro}" stroke-opacity=".35" stroke-width="3"/>
+    <ellipse cx="60" cy="70" rx="28" ry="18" fill="${a.claro}" opacity=".5"/>
+    <path d="M38 44 q5 -8 10 0 q5 -8 10 0 q5 -8 10 0" fill="none" stroke="${a.escuro}" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+    <ellipse cx="60" cy="30" rx="17" ry="11" fill="${a.cor}" stroke="${a.escuro}" stroke-opacity=".35" stroke-width="3"/>
+  </svg>`;
+}
+
+function baseSVG(visual){
+  const cores = {
+    casa:     { a:'#8B7A66', b:'#A89478', c:'#B8A488' },
+    fazenda:  { a:'#C8A050', b:'#D8B860', c:'#E8D080' },
+    selva:    { a:'#6A5A3A', b:'#8A7A4A', c:'#A8A070' },
+    agua:     { a:'#4A7A98', b:'#6A9AB8', c:'#8ABAD8' },
+    rainbow:  { a:'#D8C8E8', b:'#E8D8F0', c:'#F8E8F8' },
+    trofeu:   { a:'#C8922A', b:'#F5C23A', c:'#FFE888' },
+    brasil:   { a:'#5A4A2A', b:'#7A6A3A', c:'#9A8A5A' },
+    fantasia: { a:'#6A3A88', b:'#9050C0', c:'#B878D8' }
+  };
+  const c = cores[visual] || cores.casa;
+  return `<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse cx="200" cy="170" rx="180" ry="22" fill="#000" opacity=".18"/>
+    <ellipse cx="200" cy="150" rx="175" ry="42" fill="${c.a}"/>
+    <ellipse cx="200" cy="138" rx="165" ry="38" fill="${c.b}"/>
+    <ellipse cx="200" cy="130" rx="150" ry="30" fill="${c.c}" opacity=".85"/>
+    <ellipse cx="200" cy="124" rx="120" ry="18" fill="#FFFFFF" opacity=".18"/>
+  </svg>`;
+}
+
+function aplicarTema(visual){
+  const t = TEMAS[visual] || TEMAS.casa;
+  const caminho = `fundos/${visual}.jpg`;
+  stage.style.backgroundImage = t.fundo;
+  decor.innerHTML = '';
+  const img = new Image();
+  img.onload = () => {
+    stage.style.backgroundImage = `url('${caminho}')`;
+    stage.style.backgroundSize = 'cover';
+    stage.style.backgroundPosition = 'center';
+    stage.style.backgroundRepeat = 'no-repeat';
+  };
+  img.onerror = () => {
+    stage.style.backgroundImage = t.fundo;
+    stage.style.backgroundSize = 'cover';
+    stage.style.backgroundPosition = 'center';
+    stage.style.backgroundRepeat = 'no-repeat';
+  };
+  img.src = caminho;
+}
+function limparTema(){ stage.style.backgroundImage = ''; decor.innerHTML = ''; }
+
+function ajustarUnidade(){
+  const w = stage.clientWidth || 320;
+  const n = faseAtual ? faseAtual.config.opcoes : 3;
+  const fator = n >= 5 ? 0.18 : n === 4 ? 0.20 : 0.23;
+  stage.style.setProperty('--hs', (w * fator) + 'px');
+}
+window.addEventListener('resize', ajustarUnidade);
+window.addEventListener('orientationchange', () => setTimeout(ajustarUnidade, 120));
+
+function atualizarIconeSom(){ btnSomMenu.textContent = somLigado ? '🔊' : '🔇'; }
+function atualizarPerfilMenu(){
+  const p = perfilAtual();
+  if (!p) return;
+  perfilAvatar.textContent = p.avatar;
+  perfilNome.textContent = p.nome;
+}
+
+function atualizarHUD(){
+  if (scoreTextEl)  scoreTextEl.textContent  = getPontos();
+  if (streakTextEl) streakTextEl.textContent = streak + 'x';
+}
+function pulsarStreak(){
+  if (!hudStreakEl) return;
+  hudStreakEl.classList.remove('pulse');
+  void hudStreakEl.offsetWidth;
+  hudStreakEl.classList.add('pulse');
+  setTimeout(() => hudStreakEl.classList.remove('pulse'), 700);
+}
+
+function montarMapa(){
+  const p = perfilAtual();
+  if (!p) return;
+  gridFases.innerHTML = '';
+  FASES.forEach((f, i) => {
+    const num = i + 1;
+    const liberada = num <= p.maxFase;
+    const estrelas = p.estrelas[num] || 0;
+    const btn = document.createElement('button');
+    btn.className = 'fase-card' + (liberada ? '' : ' bloqueada');
+    btn.type = 'button';
+    if (liberada){
+      let eHTML = '';
+      for (let k=0;k<3;k++) eHTML += k < estrelas ? '⭐' : '<span class="vazia">⭐</span>';
+      btn.innerHTML = `<div class="num">FASE ${num}</div><div class="emoji">${f.emoji}</div><div class="tema">${f.tema}</div><div class="estrelas">${eHTML}</div>`;
+      btn.addEventListener('click', () => abrirFase(num));
+    } else {
+      btn.innerHTML = `<div class="num">FASE ${num}</div><div class="emoji">${f.emoji}</div><div class="tema">${f.tema}</div><div class="cadeado">🔒</div>`;
+    }
+    gridFases.appendChild(btn);
+  });
+}
+
+function montarPerfis(){
+  gridPerfis.innerHTML = '';
+  Object.keys(dados.perfis).forEach(id => {
+    const p = dados.perfis[id];
+    const card = document.createElement('div');
+    card.className = 'perfil-card' + (id === dados.atual ? ' atual' : '');
+    card.innerHTML = `
+      <button class="btn-apagar" data-id="${id}" aria-label="Apagar perfil">×</button>
+      <div class="avatar">${p.avatar}</div>
+      <div class="nome">${p.nome}</div>
+      <div class="fases-info">Fase ${p.maxFase} · ${Object.values(p.estrelas).reduce((a,b)=>a+b,0)}⭐</div>
+      <div class="pontos-info">⭐ ${p.pontos || 0} pontos</div>
+      <div class="badges-info">${Object.keys(p.badges || {}).length > 0 ? Object.entries(p.badges).map(([bid]) => { const c = CONQUISTAS.find(q => q.id === bid); return c ? `<span title="${c.nome}: ${c.desc}">${c.emoji}</span>` : ''; }).join(' ') : '<span class="sem-badge">Nenhuma conquista ainda</span>'}</div>`;
+    card.addEventListener('click', (e) => {
+      if (e.target.classList.contains('btn-apagar')) return;
+      trocarPerfil(id);
+      atualizarPerfilMenu();
+      montarPerfis();
+      mostrarToast(`Olá, ${p.nome}!`);
+      setTimeout(() => { mostrarTela('menu'); atualizarPerfilMenu(); }, 500);
+    });
+    card.querySelector('.btn-apagar').addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (Object.keys(dados.perfis).length <= 1){ mostrarToast('Precisa ter pelo menos 1 perfil!'); return; }
+      if (confirm(`Apagar o perfil "${p.nome}"?`)){
+        apagarPerfil(id);
+        atualizarPerfilMenu();
+        montarPerfis();
+      }
+    });
+    gridPerfis.appendChild(card);
+  });
+  if (Object.keys(dados.perfis).length < 4){
+    const add = document.createElement('div');
+    add.className = 'perfil-card add';
+    add.innerHTML = `<div class="avatar">＋</div><div class="nome">Novo jogador</div>`;
+    add.addEventListener('click', abrirModalNovoPerfil);
+    gridPerfis.appendChild(add);
+  }
+}
+
+let modalPerfil = null;
+let avatarEscolhido = '🐱';
+function criarModal(){
+  const div = document.createElement('div');
+  div.id = 'modalPerfil';
+  div.className = 'hidden';
+  div.innerHTML = `
+    <div class="modal-card">
+      <h3>Novo jogador</h3>
+      <p>Escolha um bichinho e dê um nome</p>
+      <div class="avatar-grid" id="avatarGrid"></div>
+      <input type="text" class="campo-nome" id="campoNome" maxlength="12" placeholder="Nome" value="Jogador ${Object.keys(dados.perfis).length + 1}">
+      <div class="modal-acoes">
+        <button class="sec" id="btnCancelarPerfil">Cancelar</button>
+        <button id="btnSalvarPerfil">Criar</button>
+      </div>
+    </div>`;
+  document.querySelector('.app').appendChild(div);
+  modalPerfil = div;
+  const grid = div.querySelector('#avatarGrid');
+  AVATARES.forEach(a => {
+    const b = document.createElement('button');
+    b.className = 'avatar-op' + (a === avatarEscolhido ? ' ativo' : '');
+    b.textContent = a;
+    b.addEventListener('click', () => {
+      avatarEscolhido = a;
+      grid.querySelectorAll('.avatar-op').forEach(x => x.classList.toggle('ativo', x.textContent === a));
+    });
+    grid.appendChild(b);
+  });
+  div.querySelector('#btnCancelarPerfil').addEventListener('click', fecharModalPerfil);
+  div.querySelector('#btnSalvarPerfil').addEventListener('click', salvarNovoPerfil);
+  div.addEventListener('click', (e) => { if (e.target === div) fecharModalPerfil(); });
+}
+function abrirModalNovoPerfil(){
+  if (!modalPerfil) criarModal();
+  avatarEscolhido = AVATARES[rand(AVATARES.length)];
+  modalPerfil.querySelector('#campoNome').value = 'Jogador ' + (Object.keys(dados.perfis).length + 1);
+  modalPerfil.querySelectorAll('.avatar-op').forEach(x => x.classList.toggle('ativo', x.textContent === avatarEscolhido));
+  modalPerfil.classList.remove('hidden');
+  setTimeout(() => modalPerfil.querySelector('#campoNome').focus(), 100);
+}
+function fecharModalPerfil(){ if (modalPerfil) modalPerfil.classList.add('hidden'); }
+function salvarNovoPerfil(){
+  const nome = modalPerfil.querySelector('#campoNome').value.trim() || 'Jogador';
+  criarPerfil(nome, avatarEscolhido);
+  fecharModalPerfil();
+  atualizarPerfilMenu();
+  montarPerfis();
+  mostrarToast(`Olá, ${nome}!`);
+}
+
+/* ---------- BASE ---------- */
+function carregarBase(visual){
+  if (!baseWrap) return;
+  baseWrap.innerHTML = '';
+  const imgB = new Image();
+  imgB.alt = ''; imgB.draggable = false;
+  imgB.onload = () => { baseWrap.innerHTML = ''; baseWrap.appendChild(imgB); };
+  imgB.onerror = () => { baseWrap.innerHTML = baseSVG(visual); };
+  imgB.src = `imagens/base_${visual}.png`;
+}
+
+/* ---------- ABRIR FASE ---------- */
+function abrirFase(numero){
+  const i = Math.max(0, Math.min(FASES.length-1, numero-1));
+  faseAtual = { index: i, config: FASES[i] };
+  const tema = TEMAS[faseAtual.config.visual] || TEMAS.casa;
+  document.body.style.background = tema.fundo;
+  jogoTitulo.textContent = `FASE ${numero} • ${faseAtual.config.tema.toUpperCase()}`;
+  acertos = 0; erros = 0; ultimoId = null; atual = null; travado = false;
+  streak = 0;
+  pararAudio();
+  if (somLigado) iniciarMusica();
+  overlay.classList.add('hidden');
+  overlay.innerHTML = '';
+  mostrarTela('jogo');
+  aplicarPlaca(faseAtual.config.visual);
+  aplicarTema(faseAtual.config.visual);
+  carregarBase(faseAtual.config.visual);
+  stage.style.setProperty('--snap-y', ALVO.y + '%');
+  bodyWrap.style.setProperty('--body-scale', 1);
+  atualizarHUD();
+  requestAnimationFrame(() => {
+    ajustarUnidade();
+    iniciarRodada();
+    preloadFase();
+    preloadProximaFase();
+  });
+}
+
+function atualizarPips(){
+  const total = faseAtual ? faseAtual.config.acertos : 5;
+  pipsEl.innerHTML = '';
+  for (let i=0; i<total; i++){
+    const s = document.createElement('span');
+    s.className = 'pip' + (i < acertos ? ' done' : '');
+    s.textContent = '🐾';
+    pipsEl.appendChild(s);
+  }
+}
+
+function iniciarRodada(){
+  travado = false;
+  headsEl.innerHTML = '';
+  toastEl.classList.remove('show');
+  overlay.classList.add('hidden');
+  overlay.innerHTML = '';
+  bodyWrap.classList.remove('acenando');
+
+  nomeLabel.innerHTML = '🐾 ESCOLHA UM ANIMAL 🐾';
+  nomeLabel.classList.remove('show');
+  void nomeLabel.offsetWidth;
+  nomeLabel.classList.add('show');
+
+  const lista = faseAtual.config.animais;
+  const pool = lista.filter(id => id !== ultimoId);
+  const idCorreto = pool[rand(pool.length)];
+  atual = { id: idCorreto, ...ANIMAIS[idCorreto] };
+  ultimoId = idCorreto;
+
+  const ajAtual = ajusteDe(idCorreto);
+  bodyWrap.style.setProperty('--body-scale', ajAtual.escala || 1);
+
+  bodyWrap.innerHTML = '';
+  const imgCorpo = new Image();
+  imgCorpo.alt = ''; imgCorpo.draggable = false;
+  imgCorpo.onload = () => {
+    bodyWrap.innerHTML = '';
+    bodyWrap.appendChild(imgCorpo);
+    aplicarSnapY();
+  };
+  imgCorpo.onerror = () => {
+    bodyWrap.innerHTML = bodySVG(atual);
+    aplicarSnapY();
+  };
+  imgCorpo.src = `imagens/${atual.id}_corpo.png`;
+
+  const outrosIds = shuffle(lista.filter(id => id !== idCorreto));
+  const qtd = Math.min(faseAtual.config.opcoes, lista.length);
+  const idsRodada = [idCorreto, ...outrosIds.slice(0, qtd-1)];
+  shuffle(idsRodada);
+  const posicoes = POSICOES[qtd] || POSICOES[3];
+
+  idsRodada.forEach((id, i) => {
+    const animal = { id, ...ANIMAIS[id] };
+    const ajH = ajusteDe(id);
+    const el = document.createElement('div');
+    el.className = 'head';
+    el.dataset.animal = id;
+    el.dataset.bx = posicoes[i].x;
+    el.dataset.by = posicoes[i].y;
+    el.style.left = posicoes[i].x + '%';
+    el.style.top  = posicoes[i].y + '%';
+    el.style.setProperty('--s','0');
+    el.style.setProperty('--zoom', ajH.cabeca || 1.15);
+    el.style.opacity = '0';
+
+    const inner = document.createElement('div');
+    inner.className = 'head-inner';
+    inner.textContent = animal.emoji;
+    const imgC = new Image();
+    imgC.alt = ''; imgC.draggable = false;
+    imgC.onload = () => { inner.textContent = ''; inner.appendChild(imgC); };
+    imgC.src = `imagens/${animal.id}_cabeca.png`;
+
+    el.appendChild(inner);
+    headsEl.appendChild(el);
+    ligarArraste(el, animal);
+    setTimeout(() => {
+      el.style.opacity = '1';
+      el.style.setProperty('--s','1');
+    }, 60 + i*90);
+  });
+
+  atualizarPips();
+  ajustarUnidade();
+}
+
+function ligarArraste(el, animal){
+  let arrastando = false, pid = null;
+  let sx=0, sy=0, dx=0, dy=0;
+  /* Acessibilidade: teclado */
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('role', 'button');
+  el.setAttribute('aria-label', animal.nome);
+  el.addEventListener('keydown', e => {
+    if (travado) return;
+    if (e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      escolher(el, animal);
+    }
+  });
+  el.addEventListener('pointerdown', e => {
+    if (travado) return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    e.preventDefault();
+    pid = e.pointerId;
+    try{ el.setPointerCapture(pid); }catch(_){}
+    arrastando = true;
+    sx = e.clientX; sy = e.clientY; dx = 0; dy = 0;
+    el.classList.add('dragging');
+    el.style.transition = 'none';
+  });
+  el.addEventListener('pointermove', e => {
+    if (!arrastando || e.pointerId !== pid) return;
+    e.preventDefault();
+    dx = e.clientX - sx; dy = e.clientY - sy;
+    el.style.setProperty('--dx', dx + 'px');
+    el.style.setProperty('--dy', dy + 'px');
+  });
+  function soltar(e){
+    if (!arrastando || e.pointerId !== pid) return;
+    arrastando = false; pid = null;
+    el.classList.remove('dragging');
+    el.style.transition = '';
+    if (travado) return;
+    const andou = Math.hypot(dx, dy);
+    if (andou < 12){ escolher(el, animal); return; }
+    const r  = el.getBoundingClientRect();
+    const sr = stage.getBoundingClientRect();
+    const cx = r.left + r.width/2  - sr.left;
+    const cy = r.top  + r.height/2 - sr.top;
+    const snapY = parseFloat(getComputedStyle(stage).getPropertyValue('--snap-y')) || ALVO.y;
+    const alvoX = sr.width  * 0.5;
+    const alvoY = sr.height * (snapY / 100);
+    if (Math.hypot(cx-alvoX, cy-alvoY) < sr.width * 0.32) escolher(el, animal);
+    else voltarAoLugar(el);
+  }
+  el.addEventListener('pointerup', soltar);
+  el.addEventListener('pointercancel', soltar);
+}
+function voltarAoLugar(el){
+  el.style.setProperty('--dx','0px');
+  el.style.setProperty('--dy','0px');
+}
+
+function escolher(el, animal){
+  if (travado) return;
+  travado = true;
+  if (animal.id === atual.id) acertou(el);
+  else errou(el);
+}
+
+function acertou(el){
+  const sr = stage.getBoundingClientRect();
+  const bx = parseFloat(el.dataset.bx)/100 * sr.width;
+  const by = parseFloat(el.dataset.by)/100 * sr.height;
+  const snapY = aplicarSnapY();
+  const tx = sr.width  * (ALVO.x/100) - bx;
+  const ty = sr.height * (snapY/100) - by;
+  el.style.transition = 'transform .42s cubic-bezier(.34,1.56,.64,1), opacity .3s';
+  void el.offsetWidth;
+  el.style.zIndex = '12';
+  el.style.setProperty('--dx', tx+'px');
+  el.style.setProperty('--dy', ty+'px');
+  setTimeout(() => {
+    const inner = el.querySelector('.head-inner');
+    if (inner) inner.classList.add('encaixada');
+  }, 380);
+  setTimeout(() => {
+    bodyWrap.classList.remove('acenando');
+    void bodyWrap.offsetWidth;
+    bodyWrap.classList.add('acenando');
+    setTimeout(() => bodyWrap.classList.remove('acenando'), 800);
+  }, 400);
+  vibrar(35);
+  [...headsEl.children].forEach(h => { if (h !== el) h.classList.add('esconder'); });
+  explodir(sr.width * (ALVO.x/100), sr.height * (snapY/100));
+  tocarAcerto();
+
+  setPontos(getPontos() + PONTOS_POR_ACERTO);
+  streak++;
+  atualizarHUD();
+  pulsarStreak();
+  tocarCombo(streak);
+  verificarConquistas(streak, erros, getPontos());
+
+  setTimeout(() => {
+    const letra = atual.nome.charAt(0).toUpperCase();
+    nomeLabel.innerHTML = `${atual.emoji} <span class="letra-destaque">${letra}</span> de ${atual.nome.toUpperCase()}`;
+    nomeLabel.classList.remove('show');
+    void nomeLabel.offsetWidth;
+    nomeLabel.classList.add('show');
+  }, 260);
+  acertos++;
+  atualizarPips();
+  setTimeout(() => {
+    falarNomeESom(atual.id, atual.nome, atual.som, () => {
+      setTimeout(() => {
+        if (acertos >= faseAtual.config.acertos) terminarFase();
+        else iniciarRodada();
+      }, 800);
+    });
+  }, 500);
+}
+
+function errou(el){
+  erros++;
+  tocarErro();
+  vibrar([70, 50, 70]);
+  mostrarToast('Ops! Tente de novo! 🙈');
+  voltarAoLugar(el);
+  const inner = el.querySelector('.head-inner');
+  inner.classList.add('shake');
+  setTimeout(() => inner.classList.remove('shake'), 540);
+  if (streak > 0){
+    streak = 0;
+    atualizarHUD();
+  }
+  setTimeout(() => { travado = false; }, 700);
+}
+
+let toastTimer = null;
+function mostrarToast(msg){
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1700);
+}
+
+function explodir(x, y){
+  const ic = ['⭐','✨','🌟','💫','⭐'];
+  for (let i=0;i<9;i++){
+    const s = document.createElement('span');
+    s.className = 'spark';
+    s.textContent = ic[rand(ic.length)];
+    const ang = (Math.PI*2*i/9) + Math.random()*0.6;
+    const d = 55 + Math.random()*70;
+    s.style.left = x + 'px'; s.style.top  = y + 'px';
+    s.style.fontSize = (15 + Math.random()*16) + 'px';
+    s.style.setProperty('--tx', (Math.cos(ang)*d).toFixed(1)+'px');
+    s.style.setProperty('--ty', (Math.sin(ang)*d).toFixed(1)+'px');
+    stage.appendChild(s);
+    setTimeout(() => s.remove(), 900);
+  }
+}
+
+function soltarConfete(){
+  const visual = faseAtual ? faseAtual.config.visual : 'casa';
+  const ic = CONFETE_TEMA[visual] || CONFETE_TEMA.casa;
+  for (let i=0;i<28;i++){
+    setTimeout(() => {
+      const s = document.createElement('span');
+      s.className = 'confete';
+      s.textContent = ic[rand(ic.length)];
+      s.style.left = (Math.random()*96+2) + '%';
+      s.style.fontSize = (14 + Math.random()*20) + 'px';
+      s.style.animationDuration = (1.7 + Math.random()*1.3) + 's';
+      stage.appendChild(s);
+      setTimeout(() => s.remove(), 3400);
+    }, i*70);
+  }
+}
+
+function calcularEstrelas(e){ return e === 0 ? 3 : e <= 2 ? 2 : 1; }
+
+function terminarFase(){
+  const num = faseAtual.index + 1;
+  const p = perfilAtual();
+  const estrelas = calcularEstrelas(erros);
+  const anterior = p.estrelas[num] || 0;
+  if (estrelas > anterior) p.estrelas[num] = estrelas;
+  if (num === p.maxFase && num < FASES.length) p.maxFase = num + 1;
+  salvarPerfis();
+  /* Verificar conquistas de fase perfeita e todas fases */
+  if (erros === 0) concederBadge('fase_perfeita');
+  if (num >= FASES.length) concederBadge('todas_fases');
+  let eHTML = '';
+  for (let k=0;k<3;k++) eHTML += k < estrelas ? '⭐' : '<span class="vazia">⭐</span>';
+  const ultima = num === FASES.length;
+  const btnProxima = !ultima ? `<button id="btnProxima">➡️ Próxima fase</button>` : '';
+  const titulo = ultima ? '🎖️ Mestre dos Bichinhos!' : 'Parabéns!';
+  const msg = ultima
+    ? `${p.avatar} ${p.nome} completou todas as fases!`
+    : `${p.avatar} ${p.nome} terminou a FASE ${num}!`;
+  overlay.innerHTML = `
+    <div class="win-card">
+      <div class="trofeu">${ultima ? '🏆' : '🎉'}</div>
+      <h2>${titulo}</h2>
+      <p>${msg}</p>
+      <div class="estrelas-fim">${eHTML}</div>
+      <div class="pontos-fim">
+        <span>⭐ ${p.pontos || 0} pontos</span>
+      </div>
+      <div class="acoes">
+        ${btnProxima}
+        <button id="btnRepetir" class="sec">🔁 Jogar de novo</button>
+        <button id="btnMenu" class="sec">🏠 Voltar ao menu</button>
+      </div>
+    </div>`;
+  overlay.classList.remove('hidden');
+  pararMusica();
+  tocarFanfarra();
+  vibrar([60, 40, 60, 40, 120]);
+  setTimeout(() => {
+    falar(ultima
+      ? `Parabéns ${p.nome}! Você virou Mestre dos Bichinhos!`
+      : `Parabéns ${p.nome}! Você completou a fase!`);
+  }, 700);
+  soltarConfete();
+  const bp = document.getElementById('btnProxima');
+  if (bp) bp.addEventListener('click', () => abrirFase(num + 1));
+  document.getElementById('btnRepetir').addEventListener('click', () => abrirFase(num));
+  document.getElementById('btnMenu').addEventListener('click', voltarAoMenu);
+}
+
+/* ============================================================
+   CRIA SEU BICHO
+   ============================================================ */
+let criaCorpoId = null;
+let criaCabecaId = null;
+const STORAGE_CRIACOES = 'cabecaAnimais.criacoes.v1';
+
+function carregarCriacoes(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_CRIACOES)) || []; }catch(e){ return []; }
+}
+function salvarCriacoes(lista){
+  try{ localStorage.setItem(STORAGE_CRIACOES, JSON.stringify(list.slice(0, 18))); }catch(e){}
+}
+function guardarCriacao(){
+  if (!criaCorpoId || !criaCabecaId) return;
+  const lista = carregarCriacoes();
+  lista.unshift({ corpo: criaCorpoId, cabeca: criaCabecaId, ts: Date.now() });
+  if (lista.length > 18) lista.length = 18;
+  try{ localStorage.setItem(STORAGE_CRIACOES, JSON.stringify(lista)); }catch(e){}
+  renderizarGaleria();
+  mostrarToast('Bicho salvo! 🎉');
+  concederBadge('criador');
+}
+function apagarCriacao(idx){
+  const lista = carregarCriacoes();
+  lista.splice(idx, 1);
+  try{ localStorage.setItem(STORAGE_CRIACOES, JSON.stringify(lista)); }catch(e){}
+  renderizarGaleria();
+}
+function renderizarGaleria(){
+  if (!criaGaleria) return;
+  const lista = carregarCriacoes();
+  criaGaleria.innerHTML = '';
+  if (lista.length === 0) return;
+  lista.forEach((item, idx) => {
+    const aC = ANIMAIS[item.corpo];
+    const aH = ANIMAIS[item.cabeca];
+    if (!aC || !aH) return;
+    const el = document.createElement('div');
+    el.className = 'cria-item';
+    el.innerHTML = `
+      <button class="btn-apagar-cria" aria-label="Apagar">×</button>
+      <div class="item-emojis">${aH.emoji}${aC.emoji}</div>
+      <div class="item-nome">${aH.nome}/${aC.nome}</div>`;
+    el.querySelector('.btn-apagar-cria').addEventListener('click', (e) => {
+      e.stopPropagation();
+      apagarCriacao(idx);
+    });
+    el.addEventListener('click', () => {
+      criaCorpoId = item.corpo;
+      criaCabecaId = item.cabeca;
+      atualizarCria();
+    });
+    criaGaleria.appendChild(el);
+  });
+}
+
+function atualizarCria(){
+  const aCorpo = ANIMAIS[criaCorpoId];
+  criaBody.innerHTML = '';
+  const imgCorpo = new Image();
+  imgCorpo.alt = ''; imgCorpo.draggable = false;
+  imgCorpo.onload = () => { criaBody.innerHTML = ''; criaBody.appendChild(imgCorpo); };
+  imgCorpo.onerror = () => { criaBody.innerHTML = bodySVG(aCorpo); };
+  imgCorpo.src = `imagens/${criaCorpoId}_corpo.png`;
+
+  const aCabeca = ANIMAIS[criaCabecaId];
+  criaHead.innerHTML = '';
+  const inner = document.createElement('div');
+  inner.className = 'head-inner';
+  inner.textContent = aCabeca.emoji;
+  const imgCab = new Image();
+  imgCab.alt = ''; imgCab.draggable = false;
+  imgCab.onload = () => { inner.textContent = ''; inner.appendChild(imgCab); };
+  imgCab.src = `imagens/${criaCabecaId}_cabeca.png`;
+  criaHead.appendChild(inner);
+
+  const nome = `${aCorpo.nome} com cabeça de ${aCabeca.nome}`;
+  const a1 = aCorpo.nome.charAt(0).toUpperCase();
+  const a2 = aCabeca.nome.charAt(0).toUpperCase();
+  criaNome.innerHTML = `<span class="destaque">${a1}</span>${aCorpo.nome.slice(1)} com cabeça de <span class="destaque">${a2}</span>${aCabeca.nome.slice(1)}`;
+  criaNome.dataset.fala = `${aCorpo.nome} com cabeça de ${aCabeca.nome}!`;
+}
+
+function sortearCorpo(){
+  const ids = Object.keys(ANIMAIS);
+  let novo;
+  do { novo = ids[rand(ids.length)]; } while (novo === criaCorpoId && ids.length > 1);
+  criaCorpoId = novo;
+  atualizarCria();
+}
+function sortearCabeca(){
+  const ids = Object.keys(ANIMAIS);
+  let novo;
+  do { novo = ids[rand(ids.length)]; } while (novo === criaCabecaId && ids.length > 1);
+  criaCabecaId = novo;
+  atualizarCria();
+}
+function sortearTudo(){
+  sortearCorpo();
+  sortearCabeca();
+  vibrar(25);
+  concederBadge('criador');
+}
+function falarCombinacao(){
+  if (!somLigado) return;
+  const a1 = ANIMAIS[criaCorpoId].nome;
+  const a2 = ANIMAIS[criaCabecaId].nome;
+  falar(`${a1} com cabeça de ${a2}!`);
+}
+function abrirCria(){
+  pararAudio();
+  pararMusica();
+  document.body.style.background = 'linear-gradient(180deg,#ffe0f0 0%,#fff8d8 50%,#c8e8ff 100%)';
+  const ids = Object.keys(ANIMAIS);
+  criaCorpoId = ids[rand(ids.length)];
+  do { criaCabecaId = ids[rand(ids.length)]; } while (criaCabecaId === criaCorpoId);
+  atualizarCria();
+  renderizarGaleria();
+  mostrarTela('cria');
+}
+
+/* ============================================================
+   NAVEGAÇÃO
+   ============================================================ */
+function voltarAoMenu(){
+  pararAudio();
+  pararMusica();
+  overlay.classList.add('hidden');
+  overlay.innerHTML = '';
+  document.body.style.background = 'linear-gradient(180deg,#a9e4ff 0%,#cdefff 42%,#d7f5c4 100%)';
+  limparTema();
+  atualizarPerfilMenu();
+  mostrarTela('menu');
+}
+function abrirMapa(){
+  pararAudio();
+  pararMusica();
+  document.body.style.background = 'linear-gradient(180deg,#a9e4ff 0%,#cdefff 42%,#d7f5c4 100%)';
+  montarMapa();
+  mostrarTela('mapa');
+}
+function abrirTelaPerfis(){
+  pararAudio();
+  pararMusica();
+  montarPerfis();
+  mostrarTela('perfis');
+}
+function abrirTutorial(){
+  mostrarTela('tutorial');
+}
+function comecarJogo(){
+  pegarCtx();
+  tentarBloquearRotacao();
+  const p = perfilAtual();
+  abrirFase(Math.min(p.maxFase, FASES.length));
+}
+
+document.getElementById('btnJogar').addEventListener('click', comecarJogo);
+document.getElementById('btnEscolher').addEventListener('click', abrirMapa);
+document.getElementById('btnCria').addEventListener('click', abrirCria);
+document.getElementById('btnTutorial').addEventListener('click', abrirTutorial);
+document.getElementById('btnCriaVoltar').addEventListener('click', voltarAoMenu);
+document.getElementById('btnCriaOuvir').addEventListener('click', falarCombinacao);
+document.getElementById('btnTrocaCorpo').addEventListener('click', sortearCorpo);
+document.getElementById('btnTrocaCabeca').addEventListener('click', sortearCabeca);
+document.getElementById('btnSortear').addEventListener('click', sortearTudo);
+document.getElementById('btnSalvarCriacao').addEventListener('click', guardarCriacao);
+document.getElementById('btnTrocarPerfil').addEventListener('click', abrirTelaPerfis);
+document.getElementById('btnMapaVoltar').addEventListener('click', voltarAoMenu);
+document.getElementById('btnPerfisVoltar').addEventListener('click', voltarAoMenu);
+document.getElementById('btnTutorialVoltar').addEventListener('click', voltarAoMenu);
+document.getElementById('btnJogoVoltar').addEventListener('click', voltarAoMenu);
+document.getElementById('btnReiniciarFase').addEventListener('click', () => {
+  if (faseAtual) abrirFase(faseAtual.index + 1);
+});
+btnSomMenu.addEventListener('click', () => { alternarSom(); atualizarIconeSom(); });
+document.getElementById('btnZerar').addEventListener('click', () => {
+  const p = perfilAtual();
+  if (confirm(`Apagar o progresso de "${p.nome}"?`)){
+    p.maxFase = 1; p.estrelas = {}; p.pontos = 0;
+    salvarPerfis();
+    montarMapa();
+    mostrarToast('Progresso apagado!');
+  }
+});
+
+function estaTelaCheia(){
+  return !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+}
+function entrarTelaCheia(){
+  const el = document.documentElement;
+  const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+  if (req){
+    try{ const p = req.call(el); if (p && p.catch) p.catch(()=>{}); }catch(e){}
+    setTimeout(tentarBloquearRotacao, 300);
+  }
+}
+function sairTelaCheia(){
+  const exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+  if (exit){
+    try{ const p = exit.call(document); if (p && p.catch) p.catch(()=>{}); }catch(e){}
+  }
+}
+function alternarTelaCheia(){ estaTelaCheia() ? sairTelaCheia() : entrarTelaCheia(); }
+function atualizarIconeTelaCheia(){
+  const btn = document.getElementById('btnTelaCheia');
+  if (btn) btn.textContent = estaTelaCheia() ? '🗗' : '⛶';
+}
+const suportaTelaCheia = !!(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen);
+if (!suportaTelaCheia){ const b = document.getElementById('btnTelaCheia'); if (b) b.style.display = 'none'; }
+['fullscreenchange','webkitfullscreenchange','msfullscreenchange'].forEach(ev => document.addEventListener(ev, atualizarIconeTelaCheia));
+const btnTC = document.getElementById('btnTelaCheia');
+if (btnTC) btnTC.addEventListener('click', alternarTelaCheia);
+
+/* ============================================================
+   PRÉ-CARREGAMENTO EM BACKGROUND
+   ============================================================ */
+function preloadTudo(){
+  const temas = ['casa','fazenda','selva','agua','rainbow','trofeu','brasil','fantasia'];
+  const todosBichos = Object.keys(ANIMAIS);
+
+  temas.forEach(v => {
+    new Image().src = `imagens/base_${v}.png`;
+    new Image().src = `placas/${v}.png`;
+    const imgFundo = new Image();
+    imgFundo.src = `fundos/${v}.jpg`;
+  });
+
+  todosBichos.forEach(id => {
+    new Image().src = `imagens/${id}_corpo.png`;
+    new Image().src = `imagens/${id}_cabeca.png`;
+  });
+}
+
+setTimeout(preloadTudo, 2000);
+
+carregarPerfis();
+atualizarPerfilMenu();
+atualizarIconeSom();
+atualizarHUD();
+mostrarTela('menu');
+window.addEventListener('load', () => setTimeout(ajustarUnidade, 60));

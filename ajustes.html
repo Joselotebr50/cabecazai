@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ajustes de Posição — Cabeça de Animais</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:#1a1a2e;color:#eee;min-height:100vh}
+h1{text-align:center;padding:16px;font-size:1.4rem;color:#e0e0ff}
+.toolbar{display:flex;justify-content:center;gap:12px;padding:8px 16px;flex-wrap:wrap}
+.toolbar button{padding:8px 18px;border:none;border-radius:8px;cursor:pointer;font-size:.95rem;font-weight:600;transition:all .2s}
+#btnSalvar{background:#4caf50;color:#fff}
+#btnSalvar:hover{background:#43a047}
+#btnCopiar{background:#2196f3;color:#fff}
+#btnCopiar:hover{background:#1e88e5}
+#btnResetar{background:#ff9800;color:#fff}
+#btnResetar:hover{background:#f57c00}
+#btnVoltar{background:#666;color:#fff}
+#btnVoltar:hover{background:#555}
+.categorias{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;padding:16px}
+.cat-btn{padding:8px 16px;border:2px solid #444;border-radius:10px;background:#222;color:#ccc;cursor:pointer;font-size:.9rem;transition:all .2s}
+.cat-btn:hover,.cat-btn.active{border-color:#7c4dff;background:#2a1a4a;color:#fff}
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;padding:16px;max-width:1400px;margin:0 auto}
+.card{background:#16213e;border-radius:14px;padding:12px;display:flex;flex-direction:column;align-items:center;position:relative}
+.card-nome{font-size:1rem;font-weight:700;margin-bottom:8px;color:#e0e0ff}
+.card-emoji{font-size:1.5rem;margin-right:6px}
+.cenario{position:relative;width:180px;height:200px;background-size:contain;background-repeat:no-repeat;background-position:center;border:2px solid #333;border-radius:10px;overflow:hidden;cursor:crosshair;user-select:none;-webkit-user-select:none;touch-action:none}
+.cenario .base{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;pointer-events:none;opacity:.6}
+.cenario .corpo{position:absolute;left:50%;transform:translateX(-50%);bottom:10%;height:65%;object-fit:contain;pointer-events:none;z-index:2}
+.cenario .cabeca{position:absolute;object-fit:contain;z-index:3;cursor:grab;filter:drop-shadow(0 0 4px rgba(255,255,0,.6))}
+.cenario .cabeca:active{cursor:grabbing}
+.cenario .area-encaixe{position:absolute;border:2px dashed rgba(76,175,80,.7);border-radius:6px;pointer-events:none;z-index:1;background:rgba(76,175,80,.08)}
+.valores{display:flex;gap:8px;margin-top:8px;font-size:.75rem;color:#aaa;flex-wrap:wrap;justify-content:center}
+.valores span{background:#0a0a1a;padding:2px 8px;border-radius:4px}
+.valores span b{color:#7c4dff}
+.output-area{max-width:800px;margin:20px auto;padding:16px;background:#0d1117;border-radius:10px;border:1px solid #333}
+.output-area h3{color:#7c4dff;margin-bottom:8px}
+.output-area pre{background:#161b22;padding:12px;border-radius:8px;overflow-x:auto;font-size:.8rem;color:#c9d1d9;max-height:300px;overflow-y:auto}
+.dica{text-align:center;padding:8px;color:#888;font-size:.8rem}
+.status{position:fixed;top:16px;right:16px;padding:10px 18px;border-radius:10px;font-weight:700;z-index:999;transition:all .3s;opacity:0;pointer-events:none}
+.status.show{opacity:1}
+.status.ok{background:#4caf50;color:#fff}
+.status.info{background:#2196f3;color:#fff}
+</style>
+</head>
+<body>
+
+<div class="status" id="statusMsg"></div>
+
+<h1>🐾 Ajustes de Posição — Cabeça de Animais</h1>
+
+<div class="toolbar">
+  <button id="btnVoltar" onclick="location.href='index.html'">← Voltar ao Jogo</button>
+  <button id="btnSalvar">💾 Salvar no Código</button>
+  <button id="btnCopiar">📋 Copiar AJUSTES</button>
+  <button id="btnResetar">🔄 Resetar Tudo</button>
+</div>
+
+<div class="dica">Arraste a <b style="color:#ff0">cabeça</b> para posicionar · Use <b>scroll</b> sobre a cabeça para redimensionar</div>
+
+<div class="categorias" id="catBtns"></div>
+<div class="grade" id="grade"></div>
+
+<div class="output-area" id="outputArea" style="display:none">
+  <h3>Código para jogo.js — substitua o bloco AJUSTES:</h3>
+  <pre id="outputCode"></pre>
+</div>
+
+<script>
+/* ===== DADOS DO JOGO ===== */
+const ANIMAIS = {
+  gato:       { emoji:'🐱', nome:'Gato',       cat:'casa' },
+  cachorro:   { emoji:'🐶', nome:'Cachorro',   cat:'casa' },
+  coelho:     { emoji:'🐰', nome:'Coelho',     cat:'casa' },
+  passarinho: { emoji:'🐦', nome:'Passarinho', cat:'casa' },
+  peixinho:   { emoji:'🐠', nome:'Peixinho',   cat:'casa' },
+  hamster:    { emoji:'🐹', nome:'Hamster',    cat:'casa' },
+  vaca:       { emoji:'🐮', nome:'Vaca',       cat:'fazenda' },
+  porco:      { emoji:'🐷', nome:'Porco',      cat:'fazenda' },
+  ovelha:     { emoji:'🐑', nome:'Ovelha',     cat:'fazenda' },
+  galinha:    { emoji:'🐔', nome:'Galinha',    cat:'fazenda' },
+  cavalo:     { emoji:'🐴', nome:'Cavalo',     cat:'fazenda' },
+  pato:       { emoji:'🦆', nome:'Pato',       cat:'fazenda' },
+  leao:       { emoji:'🦁', nome:'Leão',       cat:'selva' },
+  elefante:   { emoji:'🐘', nome:'Elefante',   cat:'selva' },
+  macaco:     { emoji:'🐵', nome:'Macaco',     cat:'selva' },
+  tigre:      { emoji:'🐯', nome:'Tigre',      cat:'selva' },
+  panda:      { emoji:'🐼', nome:'Panda',      cat:'selva' },
+  sapo:       { emoji:'🐸', nome:'Sapo',       cat:'agua' },
+  golfinho:   { emoji:'🐬', nome:'Golfinho',   cat:'agua' },
+  baleia:     { emoji:'🐳', nome:'Baleia',     cat:'agua' },
+  pinguim:    { emoji:'🐧', nome:'Pinguim',    cat:'agua' },
+  tartaruga:  { emoji:'🐢', nome:'Tartaruga',  cat:'agua' },
+  onca:       { emoji:'🐆', nome:'Onça',       cat:'brasil' },
+  arara:      { emoji:'🦜', nome:'Arara',      cat:'brasil' },
+  preguica:   { emoji:'🦥', nome:'Preguiça',   cat:'brasil' },
+  jacare:     { emoji:'🐊', nome:'Jacaré',     cat:'brasil' },
+  trex:       { emoji:'🦖', nome:'T-Rex',      cat:'fantasia' },
+  bronto:     { emoji:'🦕', nome:'Bronto',     cat:'fantasia' },
+  dragao:     { emoji:'🐉', nome:'Dragão',     cat:'fantasia' },
+  unicornio:  { emoji:'🦄', nome:'Unicórnio',  cat:'fantasia' }
+};
+
+/* Preguiça tem duas grafias no jogo */
+ANIMAIS['preguiça'] = ANIMAIS.preguica;
+
+const CATS = {
+  casa:      { nome:'Casa',      emoji:'🏡' },
+  fazenda:   { nome:'Fazenda',   emoji:'🚜' },
+  selva:     { nome:'Selva',     emoji:'🌴' },
+  agua:      { nome:'Água',      emoji:'🌊' },
+  brasil:    { nome:'Brasil',    emoji:'🇧🇷' },
+  fantasia:  { nome:'Fantástico',emoji:'🦄' }
+};
+
+/* Valores atuais do jogo — cabeça posição (x%, y%) e escala (%) relativo ao cenario */
+const AJUSTES_ORIG = {
+  gato:       { escala: 1.05, cabeca: 1.45, ajusteY: 3 },
+  cachorro:   { escala: 1.15, cabeca: 1.45, ajusteY: 4 },
+  coelho:     { escala: 1.00, cabeca: 1.35, ajusteY: 3 },
+  passarinho: { escala: 1.00, cabeca: 1.15, ajusteY: 6 },
+  peixinho:   { escala: 1.45, cabeca: 1.50, ajusteY: 13 },
+  hamster:    { escala: 1.00, cabeca: 1.30, ajusteY: 3 },
+  vaca:       { escala: 1.00, cabeca: 1.60, ajusteY: 3 },
+  porco:      { escala: 1.00, cabeca: 1.30, ajusteY: 3 },
+  ovelha:     { escala: 1.00, cabeca: 1.30, ajusteY: 2 },
+  galinha:    { escala: 1.00, cabeca: 0.85, ajusteY: 2 },
+  cavalo:     { escala: 1.15, cabeca: 1.60, ajusteY: 3 },
+  pato:       { escala: 1.00, cabeca: 1.15, ajusteY: 7 },
+  leao:       { escala: 1.15, cabeca: 1.95, ajusteY: 9 },
+  elefante:   { escala: 1.00, cabeca: 1.55, ajusteY: 3 },
+  macaco:     { escala: 1.00, cabeca: 1.35, ajusteY: 2 },
+  tigre:      { escala: 1.15, cabeca: 1.40, ajusteY: 2 },
+  panda:      { escala: 1.00, cabeca: 1.35, ajusteY: 2 },
+  sapo:       { escala: 1.00, cabeca: 1.30, ajusteY: 5 },
+  golfinho:   { escala: 1.45, cabeca: 1.55, ajusteY: 10 },
+  baleia:     { escala: 1.30, cabeca: 1.60, ajusteY: 10 },
+  pinguim:    { escala: 1.00, cabeca: 1.15, ajusteY: 7 },
+  tartaruga:  { escala: 1.00, cabeca: 1.15, ajusteY: 3 },
+  onca:       { escala: 1.15, cabeca: 1.45, ajusteY: 9 },
+  arara:      { escala: 1.15, cabeca: 1.75, ajusteY: 11 },
+  preguica:   { escala: 1.00, cabeca: 1.30, ajusteY: 12 },
+  jacare:     { escala: 1.00, cabeca: 1.60, ajusteY: 11 },
+  trex:       { escala: 1.15, cabeca: 1.75, ajusteY: 10 },
+  bronto:     { escala: 1.15, cabeca: 1.60, ajusteY: 5 },
+  dragao:     { escala: 1.15, cabeca: 1.60, ajusteY: 10 },
+  unicornio:  { escala: 1.15, cabeca: 1.80, ajusteY: 11 }
+};
+
+/* ===== ESTADO EDITÁVEL ===== */
+/* Para cada bicho: { x, y, cabecaPx, escala, cabeca, ajusteY } */
+/* x,y = posição da cabeça em % do cenario */
+/* cabecaPx = largura da cabeça em px dentro do cenario de 180px */
+const EDIT = {};
+
+/* Carregar do localStorage se existir */
+function carregarEdit(){
+  const salvo = localStorage.getItem('cabecaAnimais.ajustesEdit');
+  if(salvo){
+    try{ Object.assign(EDIT, JSON.parse(salvo)); return; }catch(e){}
+  }
+  /* Padrão: converter AJUSTES_ORIG para posição visual */
+  Object.keys(ANIMAIS).forEach(id => {
+    const aj = AJUSTES_ORIG[id] || { escala:1, cabeca:1.15, ajusteY:0 };
+    EDIT[id] = {
+      x: 50,                     /* centro horizontal */
+      y: 18 + (aj.ajusteY||0)*3, /* topo do corpo + ajusteY convertido */
+      cabecaPx: 60 * (aj.cabeca||1.15),
+      escala: aj.escala || 1,
+      cabeca: aj.cabeca || 1.15,
+      ajusteY: aj.ajusteY || 0
+    };
+  });
+}
+carregarEdit();
+
+function salvarEdit(){
+  localStorage.setItem('cabecaAnimais.ajustesEdit', JSON.stringify(EDIT));
+}
+
+/* ===== CATEGORIAS ===== */
+let catAtiva = 'todos';
+const catContainer = document.getElementById('catBtns');
+
+function renderCatBtns(){
+  let html = `<button class="cat-btn active" data-cat="todos">📋 Todos</button>`;
+  Object.keys(CATS).forEach(c => {
+    html += `<button class="cat-btn" data-cat="${c}">${CATS[c].emoji} ${CATS[c].nome}</button>`;
+  });
+  catContainer.innerHTML = html;
+  catContainer.querySelectorAll('.cat-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      catContainer.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      catAtiva = btn.dataset.cat;
+      renderGrade();
+    });
+  });
+}
+
+/* ===== GRADE DE CARDS ===== */
+const grade = document.getElementById('grade');
+
+function renderGrade(){
+  grade.innerHTML = '';
+  const ids = Object.keys(ANIMAIS).filter(id => {
+    if(catAtiva === 'todos') return true;
+    return ANIMAIS[id].cat === catAtiva;
+  });
+
+  ids.forEach(id => {
+    const a = ANIMAIS[id];
+    const e = EDIT[id] || { x:50, y:25, cabecaPx:70, escala:1, cabeca:1.15, ajusteY:0 };
+    const catKey = a.cat;
+    const baseImg = `imagens/base_${catKey}.png`;
+
+    /* Preguiça: o arquivo usa preguiça (com cedilha) */
+    const imgId = id === 'preguica' ? 'preguiça' : id;
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-nome"><span class="card-emoji">${a.emoji}</span> ${a.nome}</div>
+      <div class="cenario" data-id="${id}">
+        <img class="base" src="${baseImg}" draggable="false">
+        <img class="corpo" src="imagens/${imgId}_corpo.png" draggable="false"
+             style="transform:translateX(-50%) scale(${e.escala})">
+        <div class="area-encaixe"></div>
+        <img class="cabeca" src="imagens/${imgId}_cabeca.png" draggable="false"
+             style="left:${e.x}%;top:${e.y}%;width:${e.cabecaPx}px;transform:translate(-50%,-50%)">
+      </div>
+      <div class="valores">
+        <span>x:<b>${e.x.toFixed(1)}</b></span>
+        <span>y:<b>${e.y.toFixed(1)}</b></span>
+        <span>escala:<b>${e.escala.toFixed(2)}</b></span>
+        <span>cabPx:<b>${e.cabecaPx.toFixed(0)}</b></span>
+      </div>
+    `;
+    grade.appendChild(card);
+    setupDrag(card, id);
+  });
+}
+
+/* ===== DRAG & RESIZE (mouse + toque) ===== */
+function setupDrag(card, id){
+  const cenario = card.querySelector('.cenario');
+  const cabeca = card.querySelector('.cabeca');
+  const corpo = card.querySelector('.corpo');
+  const area = card.querySelector('.area-encaixe');
+  let dragging = false;
+
+  /* Calcular e mostrar área de encaixe (baseado no corpo) */
+  function updateArea(){
+    if(!corpo || !area) return;
+    requestAnimationFrame(() => {
+      const cr = cenario.getBoundingClientRect();
+      const cor = corpo.getBoundingClientRect();
+      if(cr.width === 0) return;
+      const left = ((cor.left - cr.left) / cr.width) * 100;
+      const top = ((cor.top - cr.top) / cr.height) * 100;
+      const w = (cor.width / cr.width) * 100;
+      const h = (cor.height / cr.height) * 100;
+      area.style.left = left + '%';
+      area.style.top = top + '%';
+      area.style.width = w + '%';
+      area.style.height = h + '%';
+    });
+  }
+
+  /* Esperar imagens carregarem */
+  corpo.addEventListener('load', updateArea);
+  if(corpo.complete) updateArea();
+  setTimeout(updateArea, 300);
+
+  /* Mouse down = iniciar drag */
+  cabeca.addEventListener('mousedown', ev => {
+    ev.preventDefault();
+    dragging = true;
+    cabeca.style.cursor = 'grabbing';
+  });
+
+  /* Touch start */
+  cabeca.addEventListener('touchstart', ev => {
+    ev.preventDefault();
+    dragging = true;
+  }, { passive:false });
+
+  /* Mover (mouse ou toque) */
+  function mover(clientX, clientY){
+    if(!dragging) return;
+    const cr = cenario.getBoundingClientRect();
+    const x = ((clientX - cr.left) / cr.width) * 100;
+    const y = ((clientY - cr.top) / cr.height) * 100;
+    const cx = Math.max(5, Math.min(95, x));
+    const cy = Math.max(5, Math.min(95, y));
+    cabeca.style.left = cx + '%';
+    cabeca.style.top = cy + '%';
+    EDIT[id].x = cx;
+    EDIT[id].y = cy;
+    updateValores(card, id);
+  }
+
+  document.addEventListener('mousemove', ev => mover(ev.clientX, ev.clientY));
+  document.addEventListener('touchmove', ev => {
+    if(dragging) mover(ev.touches[0].clientX, ev.touches[0].clientY);
+  }, { passive:false });
+
+  /* Mouse/Touch up = soltar */
+  function parar(){
+    if(!dragging) return;
+    dragging = false;
+    cabeca.style.cursor = 'grab';
+    salvarEdit();
+  }
+  document.addEventListener('mouseup', parar);
+  document.addEventListener('touchend', parar);
+
+  /* Pinça (2 dedos) = redimensionar cabeça no celular */
+  let pincaIni = 0;
+  cenario.addEventListener('touchstart', ev => {
+    if(ev.touches.length === 2){
+      pincaIni = Math.hypot(
+        ev.touches[0].clientX - ev.touches[1].clientX,
+        ev.touches[0].clientY - ev.touches[1].clientY
+      );
+    }
+  }, { passive:true });
+  cenario.addEventListener('touchmove', ev => {
+    if(ev.touches.length === 2 && pincaIni > 0){
+      ev.preventDefault();
+      const dist = Math.hypot(
+        ev.touches[0].clientX - ev.touches[1].clientX,
+        ev.touches[0].clientY - ev.touches[1].clientY
+      );
+      const novo = Math.max(20, Math.min(150, EDIT[id].cabecaPx + (dist - pincaIni)));
+      EDIT[id].cabecaPx = novo;
+      cabeca.style.width = novo + 'px';
+      updateValores(card, id);
+      pincaIni = dist;
+      salvarEdit();
+    }
+  }, { passive:false });
+
+  /* Scroll = resize cabeça (desktop) */
+  cenario.addEventListener('wheel', ev => {
+    ev.preventDefault();
+    const delta = ev.deltaY > 0 ? -3 : 3;
+    const novo = Math.max(20, Math.min(150, EDIT[id].cabecaPx + delta));
+    EDIT[id].cabecaPx = novo;
+    cabeca.style.width = novo + 'px';
+    updateValores(card, id);
+    salvarEdit();
+  }, { passive:false });
+
+  /* Shift+Scroll = escala do corpo (desktop) */
+  cenario.addEventListener('wheel', ev => {
+    if(!ev.shiftKey) return;
+    ev.preventDefault();
+    const delta = ev.deltaY > 0 ? -0.05 : 0.05;
+    const novo = Math.max(0.5, Math.min(2.0, EDIT[id].escala + delta));
+    EDIT[id].escala = novo;
+    corpo.style.transform = `translateX(-50%) scale(${novo})`;
+    updateValores(card, id);
+    updateArea();
+    salvarEdit();
+  }, { passive:false });
+}
+
+function updateValores(card, id){
+  const e = EDIT[id];
+  const spans = card.querySelectorAll('.valores span b');
+  if(spans.length >= 4){
+    spans[0].textContent = e.x.toFixed(1);
+    spans[1].textContent = e.y.toFixed(1);
+    spans[2].textContent = e.escala.toFixed(2);
+    spans[3].textContent = e.cabecaPx.toFixed(0);
+  }
+}
+
+/* ===== GERAR CÓDIGO ===== */
+function gerarAjustesCode(){
+  const lines = ['const AJUSTES = {'];
+  const catOrder = ['casa','fazenda','selva','agua','brasil','fantasia'];
+  const catLabels = { casa:'Casa', fazenda:'Fazenda', selva:'Selva', agua:'Água', brasil:'Brasil', fantasia:'Fantástico' };
+
+  catOrder.forEach((cat, ci) => {
+    lines.push(`  /* ${catLabels[cat]} */`);
+    const ids = Object.keys(ANIMAIS).filter(id => ANIMAIS[id].cat === cat);
+    ids.forEach((id, i) => {
+      const e = EDIT[id];
+      const escala = (e.escala || 1).toFixed(2);
+      const cabeca = (e.cabecaPx / 60).toFixed(2);
+      /* ajusteY = (y - 18) / 3  (conversão reversa da padrão) */
+      const ajusteY = Math.round((e.y - 18) / 3);
+      const comma = (ci < catOrder.length - 1 || i < ids.length - 1) ? ',' : '';
+      const pad = Math.max(0, 12 - id.length);
+      lines.push(`  ${id}:${' '.repeat(pad)}{ escala: ${escala}, cabeca: ${cabeca}, ajusteY: ${ajusteY} }${comma}`);
+    });
+  });
+  lines.push('};');
+  return lines.join('\n');
+}
+
+/* ===== BOTÕES ===== */
+document.getElementById('btnCopiar').addEventListener('click', () => {
+  const code = gerarAjustesCode();
+  navigator.clipboard.writeText(code).then(() => {
+    showStatus('Código copiado!', 'ok');
+  }).catch(() => {
+    const area = document.getElementById('outputArea');
+    document.getElementById('outputCode').textContent = code;
+    area.style.display = 'block';
+    showStatus('Código gerado abaixo — copie manualmente', 'info');
+  });
+});
+
+document.getElementById('btnSalvar').addEventListener('click', () => {
+  const code = gerarAjustesCode();
+  const area = document.getElementById('outputArea');
+  document.getElementById('outputCode').textContent = code;
+  area.style.display = 'block';
+
+  navigator.clipboard.writeText(code).catch(()=>{});
+
+  showStatus('Código gerado! Copie e cole no jogo.js, substituindo o bloco AJUSTES', 'ok');
+});
+
+document.getElementById('btnResetar').addEventListener('click', () => {
+  if(!confirm('Resetar todos os ajustes para os valores originais?')) return;
+  localStorage.removeItem('cabecaAnimais.ajustesEdit');
+  Object.keys(EDIT).forEach(k => delete EDIT[k]);
+  carregarEdit();
+  renderGrade();
+  showStatus('Ajustes resetados!', 'info');
+});
+
+function showStatus(msg, type){
+  const el = document.getElementById('statusMsg');
+  el.textContent = msg;
+  el.className = 'status show ' + type;
+  setTimeout(() => el.className = 'status', 2500);
+}
+
+/* ===== INIT ===== */
+renderCatBtns();
+renderGrade();
+</script>
+</body>
+</html>

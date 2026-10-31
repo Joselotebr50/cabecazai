@@ -88,48 +88,47 @@ function aplicarPlaca(visual){
    ------------------------------------------------------------
    escala  = tamanho do CORPO   (1 = normal)
    cabeca  = tamanho da CABEÇA  (1.15 = padrão)
-   ajusteY = posição do pescoço como FRAÇÃO do corpo
-             (0 = topo, 0.25 = ¼, 0.35 = ⅓ pra baixo).
-             Quanto maior, mais a cabeça desce pro pescoço.
-             Padrão 0.25 (¼ do corpo).
+   ajusteY = empurrar a cabeça pra baixo (em % da tela).
+             Quanto maior, mais a cabeça desce.
    ============================================================ */
 const AJUSTES = {
   /* Casa */
-  gato:       { escala: 1.05, cabeca: 1.60, ajusteY: 0.25 },
-  cachorro:   { escala: 1.15, cabeca: 1.45, ajusteY: 0.25 },
-  coelho:     { escala: 1.00, cabeca: 1.45, ajusteY: 0.25 },
-  passarinho: { escala: 1.00, cabeca: 1.15, ajusteY: 0.22 },
-  peixinho:   { escala: 1.45, cabeca: 1.15, ajusteY: 0.27 },
-  hamster:    { escala: 1.00, cabeca: 1.45, ajusteY: 0.25 },
+  gato:        { escala: 1.05, cabeca: 1.45, ajusteY: 3 },
+  cachorro:    { escala: 1.15, cabeca: 1.45, ajusteY: 4 },
+  coelho:      { escala: 1.00, cabeca: 1.35, ajusteY: 3 },
+  passarinho:  { escala: 1.00, cabeca: 1.15, ajusteY: 6 },
+  peixinho:    { escala: 1.45, cabeca: 1.50, ajusteY: 13 },
+  hamster:     { escala: 1.00, cabeca: 1.30, ajusteY: 3 },
   /* Fazenda */
-  vaca:       { escala: 1.00, cabeca: 1.45, ajusteY: 0.25 },
-  porco:      { escala: 1.00, cabeca: 1.30, ajusteY: 0.25 },
-  ovelha:     { escala: 1.00, cabeca: 1.30, ajusteY: 0.25 },
-  galinha:    { escala: 1.00, cabeca: 1.00, ajusteY: 0.20 },
-  cavalo:     { escala: 1.15, cabeca: 1.60, ajusteY: 0.27 },
-  pato:       { escala: 1.00, cabeca: 1.15, ajusteY: 0.22 },
+  vaca:        { escala: 1.00, cabeca: 1.60, ajusteY: 3 },
+  porco:       { escala: 1.00, cabeca: 1.30, ajusteY: 3 },
+  ovelha:      { escala: 1.00, cabeca: 1.30, ajusteY: 2 },
+  galinha:     { escala: 1.00, cabeca: 0.85, ajusteY: 2 },
+  cavalo:      { escala: 1.15, cabeca: 1.60, ajusteY: 3 },
+  pato:        { escala: 1.00, cabeca: 1.15, ajusteY: 7 },
   /* Selva */
-  leao:       { escala: 1.15, cabeca: 1.90, ajusteY: 0.25 },
-  elefante:   { escala: 1.00, cabeca: 1.60, ajusteY: 0.27 },
-  macaco:     { escala: 1.00, cabeca: 1.45, ajusteY: 0.25 },
-  tigre:      { escala: 1.15, cabeca: 1.60, ajusteY: 0.25 },
-  panda:      { escala: 1.00, cabeca: 1.45, ajusteY: 0.25 },
+  leao:        { escala: 1.15, cabeca: 1.95, ajusteY: 9 },
+  elefante:    { escala: 1.00, cabeca: 1.55, ajusteY: 3 },
+  macaco:      { escala: 1.00, cabeca: 1.35, ajusteY: 2 },
+  tigre:       { escala: 1.15, cabeca: 1.40, ajusteY: 2 },
+  panda:       { escala: 1.00, cabeca: 1.35, ajusteY: 2 },
   /* Água */
-  sapo:       { escala: 1.00, cabeca: 1.30, ajusteY: 0.34 },
-  golfinho:   { escala: 1.45, cabeca: 1.75, ajusteY: 0.27 },
-  baleia:     { escala: 1.30, cabeca: 1.60, ajusteY: 0.27 },
-  pinguim:    { escala: 1.00, cabeca: 1.15, ajusteY: 0.25 },
-  tartaruga:  { escala: 1.00, cabeca: 1.15, ajusteY: 0.30 },
+  sapo:        { escala: 1.00, cabeca: 1.30, ajusteY: 5 },
+  golfinho:    { escala: 1.45, cabeca: 1.55, ajusteY: 10 },
+  baleia:      { escala: 1.30, cabeca: 1.60, ajusteY: 10 },
+  pinguim:     { escala: 1.00, cabeca: 1.15, ajusteY: 7 },
+  tartaruga:   { escala: 1.00, cabeca: 1.15, ajusteY: 3 },
   /* Brasil */
-  onca:       { escala: 1.15, cabeca: 1.45, ajusteY: 0.25 },
-  arara:      { escala: 1.15, cabeca: 1.75, ajusteY: 0.27 },
-  preguiça:   { escala: 1.00, cabeca: 1.30, ajusteY: 0.28 },
-  jacare:     { escala: 1.00, cabeca: 1.60, ajusteY: 0.34 },
+  onca:        { escala: 1.15, cabeca: 1.45, ajusteY: 9 },
+  arara:       { escala: 1.15, cabeca: 1.75, ajusteY: 11 },
+  preguica:    { escala: 1.00, cabeca: 1.30, ajusteY: 12 },
+  jacare:      { escala: 1.00, cabeca: 1.60, ajusteY: 11 },
+  preguiça:    { escala: 1.00, cabeca: 1.15, ajusteY: 13 },
   /* Fantástico */
-  trex:       { escala: 1.15, cabeca: 1.75, ajusteY: 0.25 },
-  bronto:     { escala: 1.15, cabeca: 1.60, ajusteY: 0.27 },
-  dragao:     { escala: 1.15, cabeca: 1.60, ajusteY: 0.28 },
-  unicornio:  { escala: 1.15, cabeca: 1.60, ajusteY: 0.27 }
+  trex:        { escala: 1.15, cabeca: 1.75, ajusteY: 10 },
+  bronto:      { escala: 1.15, cabeca: 1.60, ajusteY: 5 },
+  dragao:      { escala: 1.15, cabeca: 1.60, ajusteY: 10 },
+  unicornio:   { escala: 1.15, cabeca: 1.80, ajusteY: 11 }
 };
 
 function ajusteDe(id){
@@ -317,9 +316,6 @@ function preloadProximaFase(){
    ------------------------------------------------------------
    Usa a proporção natural da imagem. Não depende de timing,
    então funciona IGUAL em qualquer navegador.
-
-   ajusteY agora é FRAÇÃO do corpo (0=topo, 1=base).
-   O offset real = ajusteY × alturaEscaladaPx → escala com a tela.
    ============================================================ */
 function calcularSnapY(){
   const img = bodyWrap ? bodyWrap.querySelector('img') : null;
@@ -333,7 +329,7 @@ function calcularSnapY(){
   /* 2. Altura visual = largura × proporção natural da imagem */
   const alturaVisualPx = larguraVisualPx * (img.naturalHeight / img.naturalWidth);
 
-  /* 3. Aplica a'escala do bicho */
+  /* 3. Aplica a escala do bicho */
   const aj = atual ? ajusteDe(atual.id) : {};
   const escala = aj.escala || 1;
   const alturaEscaladaPx = alturaVisualPx * escala;
@@ -347,10 +343,9 @@ function calcularSnapY(){
   /* 6. Converte pra % */
   const topoPct = (topoPx / sr.height) * 100;
 
-  /* 7. ajusteY = fração do corpo (0.25 = ¼ pra baixo = pescoço) */
-  const neckRatio = typeof aj.ajusteY === 'number' ? aj.ajusteY : 0.25;
-  const bodyHeightPct = (alturaEscaladaPx / sr.height) * 100;
-  return topoPct + (bodyHeightPct * neckRatio);
+  /* 7. Ajuste fino opcional por bicho */
+  const offset = typeof aj.ajusteY === 'number' ? aj.ajusteY : 0;
+  return topoPct + offset;
 }
 
 function aplicarSnapY(){

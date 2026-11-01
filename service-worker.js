@@ -9,7 +9,7 @@
    Resultado: rápido + nunca fica preso em versão antiga.
    ============================================================ */
 
-const CACHE = 'cabeca-v6';
+const CACHE = 'cabeca-v7';
 
 const ESSENCIAIS = [
   './',

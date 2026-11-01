@@ -453,17 +453,20 @@ button{font-family:inherit;font-weight:700;cursor:pointer;border:none;}
 }
 #criaBody{
   position:absolute;left:50%;top:58%;width:60%;
-  transform:translate(-50%,-50%);
+  transform:translate(-50%,-50%) scale(var(--body-scale,1));
   pointer-events:none;z-index:2;
   display:flex;align-items:center;justify-content:center;
 }
 #criaBody svg,#criaBody img{width:100%;height:auto;display:block;}
 #criaBody .emoji-grande{font-size:min(30vw,180px);line-height:1;}
+/* Largura 33% ≈ mesma proporção cabeça/corpo do jogo principal (0.23/0.42)
+   O top é calculado por JS (aplicarSnapCria) com os mesmos AJUSTES do jogo. */
 #criaHead{
   position:absolute;left:50%;top:30%;
-  width:38%;
+  width:33%;
   transform:translate(-50%,-50%);
   z-index:3;
+  transition:top .25s;
   animation:criaPula 3s ease-in-out infinite;
 }
 @keyframes criaPula{

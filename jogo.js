@@ -539,6 +539,8 @@ function ajustarUnidade(){
 }
 window.addEventListener('resize', ajustarUnidade);
 window.addEventListener('orientationchange', () => setTimeout(ajustarUnidade, 120));
+window.addEventListener('resize', () => { if (criaCorpoId) aplicarSnapCria(); });
+window.addEventListener('orientationchange', () => setTimeout(() => { if (criaCorpoId) aplicarSnapCria(); }, 150));
 
 function atualizarIconeSom(){ btnSomMenu.textContent = somLigado ? '🔊' : '🔇'; }
 function atualizarPerfilMenu(){
@@ -1088,19 +1090,43 @@ function renderizarGaleria(){
   });
 }
 
+/* ---------- ENCAIXE NO CRIA (mesmo processo do jogo principal) ----------
+   Posição da cabeça = topo do corpo (já com escala) + ajusteY do CORPO.
+   Tamanho da cabeça = cabeca da CABEÇA escolhida (--zoom).
+   1 unidade de ajusteY = 5.15% da largura base do corpo,
+   mesma proporção do jogo principal (8.44px num corpo de 163.8px). */
+function aplicarSnapCria(){
+  if (!criaStage || !criaHead || !criaCorpoId) return;
+  const stageR = criaStage.getBoundingClientRect();
+  if (!stageR.height) return;
+  const el = criaBody.querySelector('img, svg');
+  if (!el) return;
+  const r = el.getBoundingClientRect();
+  const aj = ajusteDe(criaCorpoId);
+  const n = typeof aj.ajusteY === 'number' ? aj.ajusteY : 0;
+  const larguraBasePx = stageR.width * 0.60;       /* #criaBody tem width:60% */
+  const offsetPx = n * 0.0515 * larguraBasePx;
+  const topoPx = (r.top - stageR.top) + offsetPx;
+  criaHead.style.top = ((topoPx / stageR.height) * 100) + '%';
+}
+
 function atualizarCria(){
   const aCorpo = ANIMAIS[criaCorpoId];
+  const ajCorpo = ajusteDe(criaCorpoId);
+  const ajCab   = ajusteDe(criaCabecaId);
+  criaBody.style.setProperty('--body-scale', ajCorpo.escala || 1);
+  criaHead.style.setProperty('--zoom', ajCab.cabeca || 1.15);
   criaBody.innerHTML = '';
   const imgCorpo = new Image();
   imgCorpo.alt = ''; imgCorpo.draggable = false;
-  imgCorpo.onload = () => { criaBody.innerHTML = ''; criaBody.appendChild(imgCorpo); };
-  imgCorpo.onerror = () => { criaBody.innerHTML = bodySVG(aCorpo); };
+  imgCorpo.onload = () => { criaBody.innerHTML = ''; criaBody.appendChild(imgCorpo); aplicarSnapCria(); };
+  imgCorpo.onerror = () => { criaBody.innerHTML = bodySVG(aCorpo); aplicarSnapCria(); };
   imgCorpo.src = `imagens/${criaCorpoId}_corpo.png`;
 
   const aCabeca = ANIMAIS[criaCabecaId];
   criaHead.innerHTML = '';
   const inner = document.createElement('div');
-  inner.className = 'head-inner';
+  inner.className = 'head-inner encaixada';
   inner.textContent = aCabeca.emoji;
   const imgCab = new Image();
   imgCab.alt = ''; imgCab.draggable = false;
@@ -1151,6 +1177,7 @@ function abrirCria(){
   atualizarCria();
   renderizarGaleria();
   mostrarTela('cria');
+  requestAnimationFrame(aplicarSnapCria);
 }
 
 /* ============================================================

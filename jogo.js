@@ -88,8 +88,8 @@ function aplicarPlaca(visual){
    ------------------------------------------------------------
    escala  = tamanho do CORPO   (1 = normal)
    cabeca  = tamanho da CABEÇA  (1.15 = padrão)
-   ajusteY = empurrar a cabeça pra baixo (em % da tela).
-             Quanto maior, mais a cabeça desce.
+   ajusteY = quantos "passos" a cabeça desce do topo do corpo.
+             Escala junto com o bicho — igual em qualquer tela.
    ============================================================ */
 const AJUSTES = {
   /* Casa */
@@ -316,6 +316,10 @@ function preloadProximaFase(){
    ------------------------------------------------------------
    Usa a proporção natural da imagem. Não depende de timing,
    então funciona IGUAL em qualquer navegador.
+
+   O ajusteY escala com a LARGURA do corpo (igual em celular,
+   notebook e PC). Referência: desktop 540×720, onde
+   1 unidade de ajusteY = 7.2px.
    ============================================================ */
 function calcularSnapY(){
   const img = bodyWrap ? bodyWrap.querySelector('img') : null;
@@ -343,9 +347,12 @@ function calcularSnapY(){
   /* 6. Converte pra % */
   const topoPct = (topoPx / sr.height) * 100;
 
-  /* 7. Ajuste fino opcional por bicho */
-  const offset = typeof aj.ajusteY === 'number' ? aj.ajusteY : 0;
-  return topoPct + offset;
+  /* 7. Ajuste fino: escala com o CORPO, não com a tela.
+        Assim o encaixe fica idêntico em qualquer aparelho. */
+  const W_REF = 540, H_REF = 720; /* desktop de referência */
+  const n = typeof aj.ajusteY === 'number' ? aj.ajusteY : 0;
+  const offsetPx = n * (H_REF / 100) * (sr.width / W_REF);
+  return topoPct + (offsetPx / sr.height) * 100;
 }
 
 function aplicarSnapY(){

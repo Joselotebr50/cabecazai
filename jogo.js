@@ -318,8 +318,8 @@ function preloadProximaFase(){
    então funciona IGUAL em qualquer navegador.
 
    O ajusteY escala com a LARGURA do corpo (igual em celular,
-   notebook e PC). Referência: desktop 540×720, onde
-   1 unidade de ajusteY = 7.2px.
+   notebook e PC). Referência: celular 390×844, onde
+   1 unidade de ajusteY = 8.44px.
    ============================================================ */
 function calcularSnapY(){
   const img = bodyWrap ? bodyWrap.querySelector('img') : null;
@@ -349,7 +349,7 @@ function calcularSnapY(){
 
   /* 7. Ajuste fino: escala com o CORPO, não com a tela.
         Assim o encaixe fica idêntico em qualquer aparelho. */
-  const W_REF = 540, H_REF = 720; /* desktop de referência */
+  const W_REF = 390, H_REF = 844; /* celular de referência */
   const n = typeof aj.ajusteY === 'number' ? aj.ajusteY : 0;
   const offsetPx = n * (H_REF / 100) * (sr.width / W_REF);
   return topoPct + (offsetPx / sr.height) * 100;

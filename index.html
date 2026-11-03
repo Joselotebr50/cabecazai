@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="Cabeça">
 <link rel="apple-touch-icon" href="icones/icone-192.png">
 <link rel="icon" type="image/png" href="icones/icone-192.png">
-<link rel="stylesheet" href="estilo.css?v=4">
+<link rel="stylesheet" href="estilo.css?v=5">
 </head>
 <body>
 <div class="app">
@@ -65,6 +65,7 @@
     <header class="topbar">
       <button id="btnCriaVoltar" class="icon-btn" aria-label="Voltar">←</button>
       <h2>Cria seu bicho</h2>
+      <button id="btnCriaVideo" class="icon-btn" aria-label="Ver vídeo">🎬</button>
       <button id="btnCriaOuvir" class="icon-btn" aria-label="Ouvir">🔊</button>
     </header>
     <div id="criaStage">
@@ -163,6 +164,12 @@
       </div>
 
       <div id="nomeLabel" class="placa" aria-live="polite"></div>
+
+      <div id="videoGate" class="hidden">
+        <button id="btnVerVideo" class="btn-video">▶️ Ver vídeo</button>
+        <button id="btnSeguirJogo" class="btn-seguir" aria-label="Continuar jogando">➡️</button>
+      </div>
+
       <div id="toast" role="status"></div>
       <div id="overlay" class="hidden"></div>
     </div>
@@ -170,8 +177,13 @@
 
 </div>
 
-<script src="audio.js?v=4"></script>
-<script src="jogo.js?v=4"></script>
+<div id="videoModal" class="hidden">
+  <button id="btnFecharVideo" class="btn-fechar-video" aria-label="Fechar vídeo">✕</button>
+  <video id="playerVideo" playsinline loop preload="metadata"></video>
+</div>
+
+<script src="audio.js?v=5"></script>
+<script src="jogo.js?v=5"></script>
 <script>
   if ('serviceWorker' in navigator){
     window.addEventListener('load', () => {

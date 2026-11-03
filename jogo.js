@@ -264,6 +264,9 @@ const criaGaleria = document.getElementById('criaGaleria');
 const scoreTextEl = document.getElementById('scoreText');
 const streakTextEl = document.getElementById('streakText');
 const hudStreakEl = document.getElementById('hudStreak');
+const videoModal = document.getElementById('videoModal');
+const playerVideo = document.getElementById('playerVideo');
+const videoGate = document.getElementById('videoGate');
 
 let faseAtual = null;
 let acertos = 0, erros = 0;
@@ -731,6 +734,7 @@ function atualizarPips(){
 function iniciarRodada(){
   travado = false;
   headsEl.innerHTML = '';
+  if (videoGate) videoGate.classList.add('hidden');
   toastEl.classList.remove('show');
   overlay.classList.add('hidden');
   overlay.innerHTML = '';
@@ -915,12 +919,17 @@ function acertou(el){
   atualizarPips();
   setTimeout(() => {
     falarNomeESom(atual.id, atual.nome, atual.som, () => {
-      setTimeout(() => {
-        if (acertos >= faseAtual.config.acertos) terminarFase();
-        else iniciarRodada();
-      }, 800);
+      /* Mostra o portão de vídeo: criança escolhe assistir ou continuar */
+      videoGate.classList.remove('hidden');
     });
   }, 500);
+}
+
+function prosseguirJogo(){
+  if (videoGate) videoGate.classList.add('hidden');
+  if (!faseAtual) return;
+  if (acertos >= faseAtual.config.acertos) terminarFase();
+  else iniciarRodada();
 }
 
 function errou(el){
@@ -1272,6 +1281,49 @@ if (!suportaTelaCheia){ const b = document.getElementById('btnTelaCheia'); if (b
 ['fullscreenchange','webkitfullscreenchange','msfullscreenchange'].forEach(ev => document.addEventListener(ev, atualizarIconeTelaCheia));
 const btnTC = document.getElementById('btnTelaCheia');
 if (btnTC) btnTC.addEventListener('click', alternarTelaCheia);
+
+/* ============================================================
+   VÍDEOS DOS BICHOS
+   ============================================================ */
+let videoAoFechar = null;
+function deacentuar(s){
+  return (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+function abrirVideo(id, aoFechar){
+  if (!videoModal || !playerVideo || !id) return;
+  videoAoFechar = typeof aoFechar === 'function' ? aoFechar : null;
+  pararAudio();
+  playerVideo.src = `videos/${deacentuar(id)}.mp4`;
+  videoModal.classList.remove('hidden');
+  const p = playerVideo.play();
+  if (p && p.catch) p.catch(()=>{});
+}
+function fecharVideo(){
+  if (!videoModal) return;
+  try{ playerVideo.pause(); }catch(e){}
+  playerVideo.removeAttribute('src');
+  try{ playerVideo.load(); }catch(e){}
+  videoModal.classList.add('hidden');
+  const cb = videoAoFechar;
+  videoAoFechar = null;
+  if (cb) cb();
+}
+playerVideo.addEventListener('error', () => {
+  if (videoModal && !videoModal.classList.contains('hidden')){
+    videoAoFechar = null;
+    fecharVideo();
+    mostrarToast('Vídeo não disponível 😢');
+  }
+});
+
+document.getElementById('btnFecharVideo').addEventListener('click', fecharVideo);
+document.getElementById('btnVerVideo').addEventListener('click', () => {
+  if (atual) abrirVideo(atual.id, prosseguirJogo);
+});
+document.getElementById('btnSeguirJogo').addEventListener('click', prosseguirJogo);
+document.getElementById('btnCriaVideo').addEventListener('click', () => {
+  if (criaCabecaId) abrirVideo(criaCabecaId, null);
+});
 
 /* ============================================================
    PRÉ-CARREGAMENTO EM BACKGROUND

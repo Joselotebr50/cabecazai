@@ -9,7 +9,7 @@
    Resultado: rápido + nunca fica preso em versão antiga.
    ============================================================ */
 
-const CACHE = 'cabeca-v7';
+const CACHE = 'cabeca-v8';
 
 const ESSENCIAIS = [
   './',
@@ -46,6 +46,9 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   /* 1) Só GET */
   if (event.request.method !== 'GET') return;
+
+  /* 1.5) Requisições Range (streaming de vídeo): deixa o navegador resolver */
+  if (event.request.headers.has('range')) return;
 
   /* 2) Só http/https */
   const url = event.request.url;

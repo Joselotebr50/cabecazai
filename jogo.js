@@ -156,7 +156,9 @@ const CONQUISTAS = [
   { id:'todas_fases',      emoji:'🏆', nome:'Mestre',             desc:'Completou todas as fases!' },
   { id:'100_pontos',       emoji:'💯', nome:'100 Pontos',         desc:'Chegou a 100 pontos!' },
   { id:'500_pontos',       emoji:'🤑', nome:'500 Pontos',         desc:'Chegou a 500 pontos!' },
-  { id:'criador',          emoji:'🎨', nome:'Criador',            desc:'Criou seu primeiro bicho!' }
+  { id:'criador',          emoji:'🎨', nome:'Criador',            desc:'Criou seu primeiro bicho!' },
+  { id:'figurinhas10',     emoji:'🏷️', nome:'Colecionador',       desc:'10 figurinhas no álbum!' },
+  { id:'album30',          emoji:'🏅', nome:'Álbum Completo',     desc:'Todas as 30 figurinhas!' }
 ];
 
 function getBadges(perfil){ return perfil.badges || {}; }
@@ -242,6 +244,13 @@ const telaPerfis = document.getElementById('telaPerfis');
 const telaCria   = document.getElementById('telaCria');
 const telaTutorial = document.getElementById('telaTutorial');
 const telaJogo   = document.getElementById('telaJogo');
+const telaAlbum  = document.getElementById('telaAlbum');
+const telaQual   = document.getElementById('telaQual');
+const gridAlbum  = document.getElementById('gridAlbum');
+const albumInfo  = document.getElementById('albumInfo');
+const qualPergunta = document.getElementById('qualPergunta');
+const qualOpcoesEl = document.getElementById('qualOpcoes');
+const qualScoreEl  = document.getElementById('qualScore');
 const gridFases  = document.getElementById('gridFases');
 const gridPerfis = document.getElementById('gridPerfis');
 const jogoTitulo = document.getElementById('jogoTitulo');
@@ -282,6 +291,8 @@ function mostrarTela(q){
   telaCria.classList.toggle('hidden', q !== 'cria');
   telaTutorial.classList.toggle('hidden', q !== 'tutorial');
   telaJogo.classList.toggle('hidden', q !== 'jogo');
+  if (telaAlbum) telaAlbum.classList.toggle('hidden', q !== 'album');
+  if (telaQual) telaQual.classList.toggle('hidden', q !== 'qual');
 }
 
 function vibrar(padrao){ if ('vibrate' in navigator){ try{ navigator.vibrate(padrao); }catch(e){} } }
@@ -907,6 +918,7 @@ function acertou(el){
   pulsarStreak();
   tocarCombo(streak);
   verificarConquistas(streak, erros, getPontos());
+  registrarFigurinha(atual.id);
 
   setTimeout(() => {
     const letra = atual.nome.charAt(0).toUpperCase();
@@ -1324,6 +1336,148 @@ document.getElementById('btnSeguirJogo').addEventListener('click', prosseguirJog
 document.getElementById('btnCriaVideo').addEventListener('click', () => {
   if (criaCabecaId) abrirVideo(criaCabecaId, null);
 });
+
+/* ============================================================
+   ÁLBUM DE FIGURINHAS
+   Cada bicho acertado pela primeira vez vira figurinha.
+   Tocar numa figurinha abre o vídeo do bicho.
+   ============================================================ */
+function contarFigurinhas(){
+  const p = perfilAtual();
+  if (!p || !p.album) return 0;
+  return Object.keys(p.album).filter(k => ANIMAIS[k]).length;
+}
+function registrarFigurinha(id){
+  if (!id || !ANIMAIS[id]) return;
+  const p = perfilAtual(); if (!p) return;
+  if (!p.album) p.album = {};
+  if (p.album[id]) return;
+  p.album[id] = Date.now();
+  salvarPerfis();
+  const a = ANIMAIS[id];
+  mostrarToast(`🏷️ Nova figurinha: ${a.emoji} ${a.nome}!`);
+  const qtd = contarFigurinhas();
+  if (qtd >= 10) concederBadge('figurinhas10');
+  if (qtd >= TODOS.length) concederBadge('album30');
+}
+function abrirAlbum(){
+  const p = perfilAtual();
+  const album = (p && p.album) || {};
+  const qtd = contarFigurinhas();
+  albumInfo.textContent = `${qtd} de ${TODOS.length} figurinhas`;
+  gridAlbum.innerHTML = TODOS.map(id => {
+    const a = ANIMAIS[id];
+    const tem = !!album[id];
+    return `<div class="fig-card ${tem ? 'obtida' : 'faltando'}" data-bicho="${id}" role="button" tabindex="0">
+      <img src="imagens/${deacentuar(id)}_cabeca.png" alt="${a.nome}" draggable="false">
+      <div class="fig-nome">${tem ? a.nome : ''}</div>
+      ${tem ? '' : '<div class="interrogacao">?</div>'}
+    </div>`;
+  }).join('');
+  mostrarTela('album');
+}
+gridAlbum.addEventListener('click', e => {
+  const card = e.target.closest('.fig-card');
+  if (!card) return;
+  const id = card.dataset.bicho;
+  const p = perfilAtual();
+  if (p && p.album && p.album[id]) abrirVideo(id, null);
+  else mostrarToast('Monte esse bicho no jogo para ganhar! 🎮');
+});
+
+/* ============================================================
+   MODO "QUAL É O BICHO?"
+   O jogo fala "Onde está o gato? Miau!" e a criança
+   escolhe a cabeça certa entre as opções.
+   Usa só os bichos das fases já liberadas.
+   ============================================================ */
+const ARTIGO = {
+  gato:'o', cachorro:'o', coelho:'o', passarinho:'o', peixinho:'o', hamster:'o',
+  vaca:'a', porco:'o', ovelha:'a', galinha:'a', cavalo:'o', pato:'o',
+  leao:'o', elefante:'o', macaco:'o', tigre:'o', panda:'o',
+  sapo:'o', golfinho:'o', baleia:'a', pinguim:'o', tartaruga:'a',
+  onca:'a', arara:'a', 'preguiça':'a', jacare:'o',
+  trex:'o', bronto:'o', dragao:'o', unicornio:'o'
+};
+let qualAtual = null;
+let qualRodada = false;
+let qualPontos = 0;
+
+function bichosLiberados(){
+  const p = perfilAtual();
+  const maxF = p ? Math.max(1, Math.min(FASES.length, p.maxFase || 1)) : FASES.length;
+  const lista = [];
+  FASES.slice(0, maxF).forEach(f => f.animais.forEach(id => {
+    if (ANIMAIS[id] && !lista.includes(id)) lista.push(id);
+  }));
+  return lista.length >= 4 ? lista : FASES[0].animais.slice();
+}
+function falarPerguntaQual(){
+  if (!qualAtual || somLigado === false) return;
+  const a = ANIMAIS[qualAtual];
+  const art = ARTIGO[qualAtual] || 'o';
+  falar(`Onde está ${art} ${a.nome}? ${a.som}`);
+}
+function novaRodadaQual(){
+  const pool = bichosLiberados();
+  const nOp = pool.length >= 6 ? 4 : 3;
+  let alvo = pool[rand(pool.length)];
+  let tentativas = 0;
+  while (alvo === qualAtual && tentativas < 8){ alvo = pool[rand(pool.length)]; tentativas++; }
+  qualAtual = alvo;
+  const outros = shuffle(pool.filter(id => id !== qualAtual).slice()).slice(0, nOp - 1);
+  const lista = shuffle([qualAtual, ...outros]);
+  qualPergunta.innerHTML = '<span class="falante">🔊</span> Ouça! Quem é?';
+  qualOpcoesEl.innerHTML = lista.map(id => `
+    <button class="qual-card" data-bicho="${id}" aria-label="Bicho misterioso">
+      <img src="imagens/${deacentuar(id)}_cabeca.png" alt="" draggable="false">
+    </button>`).join('');
+  qualRodada = true;
+  setTimeout(falarPerguntaQual, 400);
+}
+function abrirQual(){
+  qualPontos = 0;
+  qualScoreEl.textContent = '⭐ 0';
+  mostrarTela('qual');
+  novaRodadaQual();
+}
+function sairQual(){
+  qualRodada = false;
+  qualAtual = null;
+  pararAudio();
+  mostrarTela('menu');
+}
+qualOpcoesEl.addEventListener('click', e => {
+  const card = e.target.closest('.qual-card');
+  if (!card || !qualRodada) return;
+  const id = card.dataset.bicho;
+  if (id === qualAtual){
+    qualRodada = false;
+    qualPontos++;
+    qualScoreEl.textContent = '⭐ ' + qualPontos;
+    card.classList.add('certo');
+    tocarAcerto();
+    vibrar(35);
+    registrarFigurinha(id);
+    const a = ANIMAIS[id];
+    falarNomeESom(id, a.nome, a.som, () => {
+      setTimeout(() => {
+        if (!telaQual.classList.contains('hidden')) novaRodadaQual();
+      }, 600);
+    });
+  } else {
+    tocarErro();
+    vibrar([70, 50, 70]);
+    card.classList.add('errado');
+    setTimeout(() => card.classList.remove('errado'), 600);
+  }
+});
+qualPergunta.addEventListener('click', falarPerguntaQual);
+document.getElementById('btnQual').addEventListener('click', abrirQual);
+document.getElementById('btnQualVoltar').addEventListener('click', sairQual);
+document.getElementById('btnQualRepetir').addEventListener('click', falarPerguntaQual);
+document.getElementById('btnAlbum').addEventListener('click', abrirAlbum);
+document.getElementById('btnAlbumVoltar').addEventListener('click', () => mostrarTela('menu'));
 
 /* ============================================================
    PRÉ-CARREGAMENTO EM BACKGROUND

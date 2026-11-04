@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="Cabeça">
 <link rel="apple-touch-icon" href="icones/icone-192.png">
 <link rel="icon" type="image/png" href="icones/icone-192.png">
-<link rel="stylesheet" href="estilo.css?v=6">
+<link rel="stylesheet" href="estilo.css?v=7">
 </head>
 <body>
 <div class="app">
@@ -29,6 +29,8 @@
       <button id="btnJogar" class="btn-grande">▶️ Jogar</button>
       <button id="btnEscolher" class="btn-grande btn-sec">🗺️ Escolher Fase</button>
       <button id="btnCria" class="btn-grande btn-sec">🎨 Cria seu bicho</button>
+      <button id="btnQual" class="btn-grande btn-sec">🔊 Qual é o bicho?</button>
+      <button id="btnAlbum" class="btn-grande btn-sec">🏷️ Meu Álbum</button>
       <button id="btnTutorial" class="btn-grande btn-sec">❓ Como jogar</button>
       <button id="btnTrocarPerfil" class="btn-perfil">
         <span id="perfilAvatar">🐱</span>
@@ -136,6 +138,27 @@
     </div>
   </section>
 
+  <section id="telaAlbum" class="tela hidden">
+    <header class="topbar">
+      <button id="btnAlbumVoltar" class="icon-btn" aria-label="Voltar">←</button>
+      <h2>Meu Álbum</h2>
+      <div class="spacer"></div>
+    </header>
+    <div class="placa" id="albumInfo">0 de 30 figurinhas</div>
+    <div id="gridAlbum" class="grid-album"></div>
+  </section>
+
+  <section id="telaQual" class="tela hidden">
+    <header class="topbar">
+      <button id="btnQualVoltar" class="icon-btn" aria-label="Voltar">←</button>
+      <h2>Qual é o bicho?</h2>
+      <button id="btnQualRepetir" class="icon-btn" aria-label="Repetir som">🔁</button>
+    </header>
+    <div class="placa" id="qualPergunta" role="button" tabindex="0"><span class="falante">🔊</span> Ouça! Quem é?</div>
+    <div id="qualScore" class="qual-score">⭐ 0</div>
+    <div id="qualOpcoes" class="qual-opcoes"></div>
+  </section>
+
   <section id="telaJogo" class="tela hidden">
     <div id="stage">
       <div id="decor" aria-hidden="true"></div>
@@ -183,7 +206,7 @@
 </div>
 
 <script src="audio.js?v=5"></script>
-<script src="jogo.js?v=6"></script>
+<script src="jogo.js?v=7"></script>
 <script>
   if ('serviceWorker' in navigator){
     window.addEventListener('load', () => {

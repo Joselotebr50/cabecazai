@@ -67,10 +67,10 @@ const FASES = [
   { tema:'Fazenda II',     visual:'fazenda',  emoji:'🌾', animais:['vaca','porco','ovelha','galinha','cavalo','pato'],              opcoes:4, acertos:5 },
   { tema:'Selva',          visual:'selva',    emoji:'🌴', animais:['leao','elefante','macaco','tigre','panda'],                    opcoes:4, acertos:5 },
   { tema:'Água',           visual:'agua',     emoji:'🌊', animais:['sapo','golfinho','baleia','pinguim','tartaruga'],               opcoes:4, acertos:5 },
-  { tema:'Tudo Junto!',    visual:'rainbow',  emoji:'🌈', animais: TODOS.slice(0,22),                                              opcoes:4, acertos:6 },
-  { tema:'Desafio Final',  visual:'trofeu',   emoji:'🏆', animais: TODOS.slice(0,22),                                              opcoes:5, acertos:6 },
   { tema:'Brasil',         visual:'brasil',   emoji:'🇧🇷', animais: BICHOS_BR,                                                       opcoes:3, acertos:4 },
-  { tema:'Fantástico',     visual:'fantasia', emoji:'🦄', animais: BICHOS_FANTASTICOS,                                               opcoes:4, acertos:5 }
+  { tema:'Fantástico',     visual:'fantasia', emoji:'🦄', animais: BICHOS_FANTASTICOS,                                               opcoes:4, acertos:5 },
+  { tema:'Tudo Junto!',    visual:'rainbow',  emoji:'🌈', animais: TODOS,                                                          opcoes:4, acertos:6 },
+  { tema:'Desafio Final',  visual:'trofeu',   emoji:'🏆', animais: TODOS,                                                          opcoes:5, acertos:6 }
 ];
 
 /* ============================================================

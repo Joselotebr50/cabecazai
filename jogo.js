@@ -79,11 +79,11 @@ const CONFETE_TEMA = {
 /* Cada fase apresenta bichos NOVOS e revisa todos os anteriores.
    O pool da fase é cumulativo: FASES[i].animais = novos + todos os anteriores. */
 const NOVOS_POR_FASE = [
-  { tema:'Casa I',         visual:'casa',     emoji:'🏡', novos:['gato','cachorro','coelho','passarinho','peixinho','hamster','periquito'], opcoes:3, acertos:4 },
-  { tema:'Casa II',        visual:'casa',     emoji:'🏠', novos:['vaca','porco','pintinho'],                                      opcoes:3, acertos:4 },
-  { tema:'Fazenda I',      visual:'fazenda',  emoji:'🚜', novos:['ovelha','galinha','cavalo','pato','cabra','peru'],              opcoes:3, acertos:5 },
-  { tema:'Fazenda II',     visual:'fazenda',  emoji:'🌾', novos:['leao','elefante','macaco','girafa','zebra'],                     opcoes:4, acertos:5 },
-  { tema:'Selva',          visual:'selva',    emoji:'🌴', novos:['tigre','panda','sapo','gorila','cobra'],                         opcoes:4, acertos:5 },
+  { tema:'Casa I',         visual:'casa',     emoji:'🏡', novos:['gato','cachorro','coelho','passarinho'],                        opcoes:3, acertos:4 },
+  { tema:'Casa II',        visual:'casa',     emoji:'🏠', novos:['peixinho','hamster','periquito'],                               opcoes:3, acertos:4 },
+  { tema:'Fazenda I',      visual:'fazenda',  emoji:'🚜', novos:['vaca','porco','ovelha','galinha'],                              opcoes:3, acertos:5 },
+  { tema:'Fazenda II',     visual:'fazenda',  emoji:'🌾', novos:['cavalo','pato','cabra','peru','pintinho'],                      opcoes:4, acertos:5 },
+  { tema:'Selva',          visual:'selva',    emoji:'🌴', novos:['leao','elefante','macaco','girafa','zebra','tigre','panda','sapo','gorila','cobra'], opcoes:4, acertos:5 },
   { tema:'Água',           visual:'agua',     emoji:'🌊', novos:['golfinho','baleia','pinguim','tartaruga','tubarao','polvo','caranguejo'], opcoes:4, acertos:5 },
   { tema:'Brasil',         visual:'brasil',   emoji:'🇧🇷', novos:['onca','arara','preguiça','jacare','tucano','capivara'],         opcoes:3, acertos:4 },
   { tema:'Fantástico',     visual:'fantasia', emoji:'🦄', novos:['trex','bronto','dragao','unicornio','sereia','fenix'],           opcoes:4, acertos:5 },

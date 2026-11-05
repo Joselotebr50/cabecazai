@@ -48,11 +48,27 @@ const ANIMAIS = {
   tucano:     { emoji:'🦜', nome:'Tucano',      cor:'#303030', escuro:'#101010', claro:'#FFD840', som:'Tuc tuc! Crá!',   tipo:'ave' },
   capivara:   { emoji:'🦫', nome:'Capivara',    cor:'#B09060', escuro:'#806030', claro:'#DCC8A0', som:'Iih! Iih!',       tipo:'quadrupede', rabo:'curto' },
   sereia:     { emoji:'🧜‍♀️', nome:'Sereia',     cor:'#50C8B0', escuro:'#209888', claro:'#A0E8D8', som:'Lá lá lááá!',     tipo:'peixe' },
-  fenix:      { emoji:'🔥', nome:'Fênix',       cor:'#F08030', escuro:'#C05010', claro:'#FFD080', som:'Kriii! Kriii!',   tipo:'ave' }
+  fenix:      { emoji:'🔥', nome:'Fênix',       cor:'#F08030', escuro:'#C05010', claro:'#FFD080', som:'Kriii! Kriii!',   tipo:'ave' },
+  /* --- Bichos novos (leva 3) --- */
+  touro:         { emoji:'🐂', nome:'Touro',          cor:'#A9744F', escuro:'#7A4F30', claro:'#D9B08C', som:'Morr! Morr!',      tipo:'quadrupede', rabo:'longo' },
+  ponei:         { emoji:'🐎', nome:'Pônei',          cor:'#C9A8D8', escuro:'#9878A8', claro:'#EFD8F8', som:'Iii hiii!',        tipo:'quadrupede', rabo:'longo' },
+  pavao:         { emoji:'🦚', nome:'Pavão',          cor:'#3A8BD8', escuro:'#2068A8', claro:'#90C8F0', som:'Plim! Plim!',      tipo:'ave' },
+  hipopotamo:    { emoji:'🦛', nome:'Hipopótamo',     cor:'#A8A0C8', escuro:'#78709A', claro:'#D8D0F0', som:'Groo! Groo!',      tipo:'quadrupede', rabo:'curto' },
+  rinoceronte:   { emoji:'🦏', nome:'Rinoceronte',    cor:'#B0B4BC', escuro:'#80848E', claro:'#E0E4EC', som:'Prrr! Prrr!',      tipo:'quadrupede', rabo:'curto' },
+  urso:          { emoji:'🐻', nome:'Urso',           cor:'#A87448', escuro:'#7A5030', claro:'#D8B090', som:'Urrr! Urrr!',      tipo:'quadrupede', rabo:'curto' },
+  cavalomarinho: { emoji:'🐴', nome:'Cavalo-marinho', cor:'#F0B850', escuro:'#C08A20', claro:'#FFE0A0', som:'Blub! Blub!',      tipo:'peixe' },
+  aguaviva:      { emoji:'🪼', nome:'Água-viva',      cor:'#F0A0D0', escuro:'#C070A0', claro:'#FFD8F0', som:'Pluf! Pluf!',      tipo:'peixe' },
+  narval:        { emoji:'🐋', nome:'Narval',         cor:'#8AA8C8', escuro:'#5A7898', claro:'#C0D8F0', som:'Tuuu! Tuuu!',      tipo:'peixe' },
+  tatu:          { emoji:'🦔', nome:'Tatu',           cor:'#C8A878', escuro:'#987848', claro:'#F0D8B0', som:'Snif! Snif!',      tipo:'quadrupede', rabo:'curto' },
+  tamandua:      { emoji:'🐜', nome:'Tamanduá',       cor:'#C89868', escuro:'#986838', claro:'#F0C8A0', som:'Nham! Nham!',      tipo:'quadrupede', rabo:'longo' },
+  boto:          { emoji:'🐬', nome:'Boto',           cor:'#E898A8', escuro:'#B86878', claro:'#FFD0D8', som:'Triii! Triii!',    tipo:'peixe' },
+  fada:          { emoji:'🧚', nome:'Fada',           cor:'#78D8B0', escuro:'#48A880', claro:'#B8FFE0', som:'Tlim tlim!',       tipo:'ave' },
+  duende:        { emoji:'🧝', nome:'Duende',         cor:'#70B868', escuro:'#408838', claro:'#B0E8A8', som:'Hihi! Hihi!',      tipo:'ave' },
+  golem:         { emoji:'🗿', nome:'Golem',          cor:'#9A8A70', escuro:'#6A5A40', claro:'#CCBCA0', som:'Tum! Tum!',        tipo:'quadrupede', rabo:'curto' }
 };
 const TODOS = Object.keys(ANIMAIS);
-const BICHOS_BR = ['onca','arara','preguiça','jacare','tucano','capivara'];
-const BICHOS_FANTASTICOS = ['trex','bronto','dragao','unicornio','sereia','fenix'];
+const BICHOS_BR = ['onca','arara','preguiça','jacare','tucano','capivara','tatu','tamandua','boto'];
+const BICHOS_FANTASTICOS = ['trex','bronto','dragao','unicornio','sereia','fenix','fada','duende','golem'];
 
 const TEMAS = {
   casa:    { fundo:'linear-gradient(180deg,#c8e8ff 0%,#e0f0ff 42%,#d8f0b8 100%)' },
@@ -81,12 +97,12 @@ const CONFETE_TEMA = {
 const NOVOS_POR_FASE = [
   { tema:'Casa I',         visual:'casa',     emoji:'🏡', novos:['gato','cachorro','coelho','passarinho'],                        opcoes:3, acertos:4 },
   { tema:'Casa II',        visual:'casa',     emoji:'🏠', novos:['peixinho','hamster','periquito'],                               opcoes:3, acertos:4 },
-  { tema:'Fazenda I',      visual:'fazenda',  emoji:'🚜', novos:['vaca','porco','ovelha','galinha'],                              opcoes:3, acertos:5 },
-  { tema:'Fazenda II',     visual:'fazenda',  emoji:'🌾', novos:['cavalo','pato','cabra','peru','pintinho'],                      opcoes:4, acertos:5 },
-  { tema:'Selva',          visual:'selva',    emoji:'🌴', novos:['leao','elefante','macaco','girafa','zebra','tigre','panda','sapo','gorila','cobra'], opcoes:4, acertos:5 },
-  { tema:'Água',           visual:'agua',     emoji:'🌊', novos:['golfinho','baleia','pinguim','tartaruga','tubarao','polvo','caranguejo'], opcoes:4, acertos:5 },
-  { tema:'Brasil',         visual:'brasil',   emoji:'🇧🇷', novos:['onca','arara','preguiça','jacare','tucano','capivara'],         opcoes:3, acertos:4 },
-  { tema:'Fantástico',     visual:'fantasia', emoji:'🦄', novos:['trex','bronto','dragao','unicornio','sereia','fenix'],           opcoes:4, acertos:5 },
+  { tema:'Fazenda I',      visual:'fazenda',  emoji:'🚜', novos:['vaca','porco','ovelha','galinha','touro','ponei'],              opcoes:3, acertos:5 },
+  { tema:'Fazenda II',     visual:'fazenda',  emoji:'🌾', novos:['cavalo','pato','cabra','peru','pintinho','pavao'],              opcoes:4, acertos:5 },
+  { tema:'Selva',          visual:'selva',    emoji:'🌴', novos:['leao','elefante','macaco','girafa','zebra','tigre','panda','sapo','gorila','cobra','hipopotamo','rinoceronte','urso'], opcoes:4, acertos:5 },
+  { tema:'Água',           visual:'agua',     emoji:'🌊', novos:['golfinho','baleia','pinguim','tartaruga','tubarao','polvo','caranguejo','cavalomarinho','aguaviva','narval'], opcoes:4, acertos:5 },
+  { tema:'Brasil',         visual:'brasil',   emoji:'🇧🇷', novos:['onca','arara','preguiça','jacare','tucano','capivara','tatu','tamandua','boto'], opcoes:3, acertos:4 },
+  { tema:'Fantástico',     visual:'fantasia', emoji:'🦄', novos:['trex','bronto','dragao','unicornio','sereia','fenix','fada','duende','golem'], opcoes:4, acertos:5 },
   { tema:'Tudo Junto!',    visual:'rainbow',  emoji:'🌈', novos:[],                                                               opcoes:4, acertos:6 },
   { tema:'Desafio Final',  visual:'trofeu',   emoji:'🏆', novos:[],                                                               opcoes:5, acertos:6 }
 ];
@@ -169,7 +185,23 @@ const AJUSTES = {
   tucano:      { escala: 1.10, cabeca: 1.55, ajusteY: 9 },
   capivara:    { escala: 1.05, cabeca: 1.40, ajusteY: 3 },
   sereia:      { escala: 1.30, cabeca: 1.45, ajusteY: 10 },
-  fenix:       { escala: 1.20, cabeca: 1.55, ajusteY: 8 }
+  fenix:       { escala: 1.20, cabeca: 1.55, ajusteY: 8 },
+  /* Leva 3 */
+  touro:         { escala: 1.05, cabeca: 1.55, ajusteY: 3 },
+  ponei:         { escala: 1.10, cabeca: 1.50, ajusteY: 3 },
+  pavao:         { escala: 1.00, cabeca: 1.35, ajusteY: 5 },
+  hipopotamo:    { escala: 1.05, cabeca: 1.55, ajusteY: 3 },
+  rinoceronte:   { escala: 1.05, cabeca: 1.55, ajusteY: 3 },
+  urso:          { escala: 1.10, cabeca: 1.45, ajusteY: 3 },
+  cavalomarinho: { escala: 1.30, cabeca: 1.55, ajusteY: 10 },
+  aguaviva:      { escala: 1.20, cabeca: 1.40, ajusteY: 10 },
+  narval:        { escala: 1.35, cabeca: 1.55, ajusteY: 10 },
+  tatu:          { escala: 1.05, cabeca: 1.40, ajusteY: 3 },
+  tamandua:      { escala: 1.05, cabeca: 1.45, ajusteY: 3 },
+  boto:          { escala: 1.40, cabeca: 1.35, ajusteY: 11 },
+  fada:          { escala: 1.25, cabeca: 1.40, ajusteY: 9 },
+  duende:        { escala: 1.20, cabeca: 1.40, ajusteY: 8 },
+  golem:         { escala: 1.15, cabeca: 1.45, ajusteY: 6 }
 };
 
 function ajusteDe(id){

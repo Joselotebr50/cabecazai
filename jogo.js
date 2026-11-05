@@ -60,18 +60,27 @@ const CONFETE_TEMA = {
   fantasia: ['⭐','✨','💫','🌟','🔮','🪄']
 };
 
-const FASES = [
-  { tema:'Casa I',         visual:'casa',     emoji:'🏡', animais:['gato','cachorro','coelho','passarinho'],                        opcoes:3, acertos:4 },
-  { tema:'Casa II',        visual:'casa',     emoji:'🏠', animais:['gato','cachorro','coelho','passarinho','peixinho','hamster'],  opcoes:3, acertos:4 },
-  { tema:'Fazenda I',      visual:'fazenda',  emoji:'🚜', animais:['vaca','porco','ovelha','galinha'],                             opcoes:3, acertos:5 },
-  { tema:'Fazenda II',     visual:'fazenda',  emoji:'🌾', animais:['vaca','porco','ovelha','galinha','cavalo','pato'],              opcoes:4, acertos:5 },
-  { tema:'Selva',          visual:'selva',    emoji:'🌴', animais:['leao','elefante','macaco','tigre','panda'],                    opcoes:4, acertos:5 },
-  { tema:'Água',           visual:'agua',     emoji:'🌊', animais:['sapo','golfinho','baleia','pinguim','tartaruga'],               opcoes:4, acertos:5 },
-  { tema:'Brasil',         visual:'brasil',   emoji:'🇧🇷', animais: BICHOS_BR,                                                       opcoes:3, acertos:4 },
-  { tema:'Fantástico',     visual:'fantasia', emoji:'🦄', animais: BICHOS_FANTASTICOS,                                               opcoes:4, acertos:5 },
-  { tema:'Tudo Junto!',    visual:'rainbow',  emoji:'🌈', animais: TODOS,                                                          opcoes:4, acertos:6 },
-  { tema:'Desafio Final',  visual:'trofeu',   emoji:'🏆', animais: TODOS,                                                          opcoes:5, acertos:6 }
+/* Cada fase apresenta bichos NOVOS e revisa todos os anteriores.
+   O pool da fase é cumulativo: FASES[i].animais = novos + todos os anteriores. */
+const NOVOS_POR_FASE = [
+  { tema:'Casa I',         visual:'casa',     emoji:'🏡', novos:['gato','cachorro','coelho','passarinho','peixinho','hamster'], opcoes:3, acertos:4 },
+  { tema:'Casa II',        visual:'casa',     emoji:'🏠', novos:['vaca','porco'],                                               opcoes:3, acertos:4 },
+  { tema:'Fazenda I',      visual:'fazenda',  emoji:'🚜', novos:['ovelha','galinha','cavalo','pato'],                            opcoes:3, acertos:5 },
+  { tema:'Fazenda II',     visual:'fazenda',  emoji:'🌾', novos:['leao','elefante','macaco'],                                     opcoes:4, acertos:5 },
+  { tema:'Selva',          visual:'selva',    emoji:'🌴', novos:['tigre','panda','sapo'],                                         opcoes:4, acertos:5 },
+  { tema:'Água',           visual:'agua',     emoji:'🌊', novos:['golfinho','baleia','pinguim','tartaruga'],                      opcoes:4, acertos:5 },
+  { tema:'Brasil',         visual:'brasil',   emoji:'🇧🇷', novos:['onca','arara','preguiça','jacare'],                            opcoes:3, acertos:4 },
+  { tema:'Fantástico',     visual:'fantasia', emoji:'🦄', novos:['trex','bronto','dragao','unicornio'],                          opcoes:4, acertos:5 },
+  { tema:'Tudo Junto!',    visual:'rainbow',  emoji:'🌈', novos:[],                                                               opcoes:4, acertos:6 },
+  { tema:'Desafio Final',  visual:'trofeu',   emoji:'🏆', novos:[],                                                               opcoes:5, acertos:6 }
 ];
+const FASES = (() => {
+  let acumulado = [];
+  return NOVOS_POR_FASE.map(f => {
+    acumulado = acumulado.concat(f.novos);
+    return { tema:f.tema, visual:f.visual, emoji:f.emoji, animais:acumulado.slice(), opcoes:f.opcoes, acertos:f.acertos };
+  });
+})();
 
 /* ============================================================
    PLACA — troca o border-image-source pelo tema da fase

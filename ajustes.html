@@ -102,9 +102,6 @@ const ANIMAIS = {
   unicornio:  { emoji:'🦄', nome:'Unicórnio',  cat:'fantasia' }
 };
 
-/* Preguiça tem duas grafias no jogo */
-ANIMAIS['preguiça'] = ANIMAIS.preguica;
-
 const CATS = {
   casa:      { nome:'Casa',      emoji:'🏡' },
   fazenda:   { nome:'Fazenda',   emoji:'🚜' },
@@ -214,9 +211,7 @@ function renderGrade(){
     const e = EDIT[id] || { x:50, y:25, cabecaPx:70, escala:1, cabeca:1.15, ajusteY:0 };
     const catKey = a.cat;
     const baseImg = `imagens/base_${catKey}.png`;
-
-    /* Preguiça: o arquivo usa preguiça (com cedilha) */
-    const imgId = id === 'preguica' ? 'preguiça' : id;
+    const imgId = id;
 
     const card = document.createElement('div');
     card.className = 'card';

@@ -27,7 +27,7 @@ const ANIMAIS = {
   tartaruga:  { emoji:'🐢', nome:'Tartaruga',  cor:'#7CB860', escuro:'#4A8A3A', claro:'#B0DC98', som:'Uuuu!',          tipo:'tartaruga' },
   onca:       { emoji:'🐆', nome:'Onça',       cor:'#E8C060', escuro:'#A07830', claro:'#FFF0C8', som:'Grrr! Grrr!',    tipo:'quadrupede', rabo:'longo', pintas:true },
   arara:      { emoji:'🦜', nome:'Arara',      cor:'#E05050', escuro:'#A02828', claro:'#FFD0B0', som:'Crá! Crá!',      tipo:'ave',       bico:'forte' },
-  preguiça:   { emoji:'🦥', nome:'Preguiça',   cor:'#A08060', escuro:'#705840', claro:'#D8C0A8', som:'Uuuuu!',         tipo:'quadrupede', rabo:'curto' },
+  preguica:    { emoji:'🦥', nome:'Preguiça',   cor:'#A08060', escuro:'#705840', claro:'#D8C0A8', som:'Uuuuu!',         tipo:'quadrupede', rabo:'curto' },
   jacare:     { emoji:'🐊', nome:'Jacaré',     cor:'#508050', escuro:'#305030', claro:'#90B090', som:'Grrr!',          tipo:'sapo',      escamas:true },
   trex:       { emoji:'🦖', nome:'T-Rex',      cor:'#6A9A50', escuro:'#3A6030', claro:'#A8D090', som:'ROAR!',          tipo:'quadrupede', rabo:'longo' },
   bronto:     { emoji:'🦕', nome:'Brontossauro',cor:'#8090A0',escuro:'#506070', claro:'#C0D0E0', som:'Uuuuu!',         tipo:'quadrupede', rabo:'longo' },
@@ -67,7 +67,7 @@ const ANIMAIS = {
   golem:         { emoji:'🗿', nome:'Golem',          cor:'#9A8A70', escuro:'#6A5A40', claro:'#CCBCA0', som:'Tum! Tum!',        tipo:'quadrupede', rabo:'curto' }
 };
 const TODOS = Object.keys(ANIMAIS);
-const BICHOS_BR = ['onca','arara','preguiça','jacare','tucano','capivara','tatu','tamandua','boto'];
+const BICHOS_BR = ['onca','arara','preguica','jacare','tucano','capivara','tatu','tamandua','boto'];
 const BICHOS_FANTASTICOS = ['trex','bronto','dragao','unicornio','sereia','fenix','fada','duende','golem'];
 
 const TEMAS = {
@@ -92,27 +92,30 @@ const CONFETE_TEMA = {
   fantasia: ['⭐','✨','💫','🌟','🔮','🪄']
 };
 
-/* Cada fase apresenta bichos NOVOS e revisa todos os anteriores.
-   O pool da fase é cumulativo: FASES[i].animais = novos + todos os anteriores. */
+/* Cada fase apresenta bichos NOVOS + uma REVISÃO TEMÁTICA
+   (bichos antigos que combinam com o tema da fase).
+   O cachorro visita a fazenda (cão de sítio) e a água (peixinho),
+   mas NUNCA entra no Fantástico — cada fase tem identidade própria.
+   revisao:'TODOS' = vale tudo (fases finais de mistura). */
 const NOVOS_POR_FASE = [
-  { tema:'Casa I',         visual:'casa',     emoji:'🏡', novos:['gato','cachorro','coelho','passarinho'],                        opcoes:3, acertos:4 },
-  { tema:'Casa II',        visual:'casa',     emoji:'🏠', novos:['peixinho','hamster','periquito'],                               opcoes:3, acertos:4 },
-  { tema:'Fazenda I',      visual:'fazenda',  emoji:'🚜', novos:['vaca','porco','ovelha','galinha','touro','ponei'],              opcoes:3, acertos:5 },
-  { tema:'Fazenda II',     visual:'fazenda',  emoji:'🌾', novos:['cavalo','pato','cabra','peru','pintinho','pavao'],              opcoes:4, acertos:5 },
-  { tema:'Selva',          visual:'selva',    emoji:'🌴', novos:['leao','elefante','macaco','girafa','zebra','tigre','panda','sapo','gorila','cobra','hipopotamo','rinoceronte','urso'], opcoes:4, acertos:5 },
-  { tema:'Água',           visual:'agua',     emoji:'🌊', novos:['golfinho','baleia','pinguim','tartaruga','tubarao','polvo','caranguejo','cavalomarinho','aguaviva','narval'], opcoes:4, acertos:5 },
-  { tema:'Brasil',         visual:'brasil',   emoji:'🇧🇷', novos:['onca','arara','preguiça','jacare','tucano','capivara','tatu','tamandua','boto'], opcoes:3, acertos:4 },
-  { tema:'Fantástico',     visual:'fantasia', emoji:'🦄', novos:['trex','bronto','dragao','unicornio','sereia','fenix','fada','duende','golem'], opcoes:4, acertos:5 },
-  { tema:'Tudo Junto!',    visual:'rainbow',  emoji:'🌈', novos:[],                                                               opcoes:4, acertos:6 },
-  { tema:'Desafio Final',  visual:'trofeu',   emoji:'🏆', novos:[],                                                               opcoes:5, acertos:6 }
+  { tema:'Casa I',         visual:'casa',     emoji:'🏡', novos:['gato','cachorro','coelho','passarinho'],                        revisao:[],                                   opcoes:3, acertos:4 },
+  { tema:'Casa II',        visual:'casa',     emoji:'🏠', novos:['peixinho','hamster','periquito'],                               revisao:['gato','cachorro','coelho','passarinho'], opcoes:3, acertos:4 },
+  { tema:'Fazenda I',      visual:'fazenda',  emoji:'🚜', novos:['vaca','porco','ovelha','galinha','touro','ponei'],              revisao:['cachorro','gato','coelho'],          opcoes:3, acertos:5 },
+  { tema:'Fazenda II',     visual:'fazenda',  emoji:'🌾', novos:['cavalo','pato','cabra','peru','pintinho','pavao'],              revisao:['vaca','porco','ovelha','galinha','cachorro'], opcoes:4, acertos:5 },
+  { tema:'Selva',          visual:'selva',    emoji:'🌴', novos:['leao','elefante','macaco','girafa','zebra','tigre','panda','sapo','gorila','cobra','hipopotamo','rinoceronte','urso'], revisao:[], opcoes:4, acertos:5 },
+  { tema:'Água',           visual:'agua',     emoji:'🌊', novos:['golfinho','baleia','pinguim','tartaruga','tubarao','polvo','caranguejo','cavalomarinho','aguaviva','narval'], revisao:['peixinho','sapo'], opcoes:4, acertos:5 },
+  { tema:'Brasil',         visual:'brasil',   emoji:'🇧🇷', novos:['onca','arara','preguica','jacare','tucano','capivara','tatu','tamandua','boto'], revisao:['macaco','passarinho'], opcoes:3, acertos:4 },
+  { tema:'Fantástico',     visual:'fantasia', emoji:'🦄', novos:['trex','bronto','dragao','unicornio','sereia','fenix','fada','duende','golem'], revisao:[], opcoes:4, acertos:5 },
+  { tema:'Tudo Junto!',    visual:'rainbow',  emoji:'🌈', novos:[], revisao:'TODOS', opcoes:4, acertos:6 },
+  { tema:'Desafio Final',  visual:'trofeu',   emoji:'🏆', novos:[], revisao:'TODOS', opcoes:5, acertos:6 }
 ];
-const FASES = (() => {
-  let acumulado = [];
-  return NOVOS_POR_FASE.map(f => {
-    acumulado = acumulado.concat(f.novos);
-    return { tema:f.tema, visual:f.visual, emoji:f.emoji, animais:acumulado.slice(), opcoes:f.opcoes, acertos:f.acertos };
-  });
-})();
+const FASES = NOVOS_POR_FASE.map(f => {
+  const revisao = f.revisao === 'TODOS' ? TODOS.slice() : (f.revisao || []);
+  return { tema:f.tema, visual:f.visual, emoji:f.emoji,
+           animais:[...(f.novos||[]), ...revisao],
+           novos:(f.novos||[]).slice(),
+           opcoes:f.opcoes, acertos:f.acertos };
+});
 
 /* ============================================================
    PLACA — troca o border-image-source pelo tema da fase
@@ -164,43 +167,42 @@ const AJUSTES = {
   arara:       { escala: 1.15, cabeca: 1.75, ajusteY: 11 },
   preguica:    { escala: 1.00, cabeca: 1.30, ajusteY: 12 },
   jacare:      { escala: 1.00, cabeca: 1.60, ajusteY: 11 },
-  preguiça:    { escala: 1.00, cabeca: 1.15, ajusteY: 12 },
   /* Fantástico */
   trex:        { escala: 1.15, cabeca: 1.75, ajusteY: 10 },
   bronto:      { escala: 1.15, cabeca: 1.60, ajusteY: 5 },
   dragao:      { escala: 1.15, cabeca: 1.60, ajusteY: 11 },
   unicornio:   { escala: 1.15, cabeca: 1.85, ajusteY: 12 },
   /* Novos bichos */
-  periquito:   { escala: 1.05, cabeca: 1.97, ajusteY: -2.16 },
+  periquito:   { escala: 1.05, cabeca: 2.45, ajusteY: 2.76 },
   pintinho:    { escala: 1.13, cabeca: 2.50, ajusteY: 2.7 },
   cabra:       { escala: 1.1, cabeca: 2.76, ajusteY: -3.18 },
   peru:        { escala: 1.18, cabeca: 2.61, ajusteY: 2.83 },
-  girafa:      { escala: 1.15, cabeca: 2.88, ajusteY: -5.73 },
-  zebra:       { escala: 1.15, cabeca: 2.07, ajusteY: -4.36 },
-  cobra:       { escala: 1, cabeca: 1.29, ajusteY: 1.26 },
-  gorila:      { escala: 1.15, cabeca: 2.27, ajusteY: -3.5 },
-  tubarao:     { escala: 1.23, cabeca: 2.72, ajusteY: 2.47 },
-  polvo:       { escala: 1.27, cabeca: 2.81, ajusteY: 4.13 },
-  caranguejo:  { escala: 1.90, cabeca: 4.20, ajusteY: 11.08 },
-  tucano:      { escala: 1.13, cabeca: 1.73, ajusteY: 0.66 },
+  girafa:      { escala: 1.15, cabeca: 2.68, ajusteY: 2.49 },
+  zebra:       { escala: 1.15, cabeca: 2.68, ajusteY: 5.47 },
+  cobra:       { escala: 1.00, cabeca: 2.33, ajusteY: 3.91 },
+  gorila:      { escala: 1.15, cabeca: 2.68, ajusteY: 3.16 },
+  tubarao:     { escala: 1.23, cabeca: 2.87, ajusteY: 7.04 },
+  polvo:       { escala: 1.27, cabeca: 2.96, ajusteY: 6.68 },
+  caranguejo:  { escala: 1.90, cabeca: 4.43, ajusteY: 9.78 },
+  tucano:      { escala: 1.13, cabeca: 2.64, ajusteY: 5.38 },
   capivara:    { escala: 1.05, cabeca: 1.40, ajusteY: 3 },
-  sereia:      { escala: 1.36, cabeca: 3.01, ajusteY: 2.95 },
+  sereia:      { escala: 1.36, cabeca: 3.17, ajusteY: 7.79 },
   fenix:       { escala: 1.20, cabeca: 1.55, ajusteY: 8 },
   /* Leva 3 */
-  touro:         { escala: 1.12, cabeca: 2.88, ajusteY: -1.88 },
+  touro:         { escala: 1.12, cabeca: 2.61, ajusteY: 4.46 },
   ponei:         { escala: 1.25, cabeca: 2.76, ajusteY: 5.18 },
-  pavao:         { escala: 1, cabeca: 1.58, ajusteY: -1.82 },
-  hipopotamo:    { escala: 1.17, cabeca: 1.99, ajusteY: -0.97 },
-  rinoceronte:   { escala: 1.14, cabeca: 2.52, ajusteY: 3.39 },
+  pavao:         { escala: 1.00, cabeca: 2.33, ajusteY: 2.83 },
+  hipopotamo:    { escala: 1.17, cabeca: 2.73, ajusteY: 4.66 },
+  rinoceronte:   { escala: 1.14, cabeca: 2.66, ajusteY: 6.75 },
   urso:          { escala: 1.37, cabeca: 3.03, ajusteY: 7.17 },
-  cavalomarinho: { escala: 1.15, cabeca: 1.82, ajusteY: -5.56 },
+  cavalomarinho: { escala: 1.15, cabeca: 2.68, ajusteY: 4.81 },
   aguaviva:      { escala: 1.20, cabeca: 1.40, ajusteY: 10 },
-  narval:        { escala: 1.27, cabeca: 2.81, ajusteY: 1.27 },
-  tatu:          { escala: 1.29, cabeca: 2.85, ajusteY: 5.75 },
-  tamandua:      { escala: 1.1, cabeca: 2.13, ajusteY: -2.49 },
-  boto:          { escala: 1.27, cabeca: 2.81, ajusteY: 2.65 },
-  fada:          { escala: 1.12, cabeca: 2.48, ajusteY: 1.03 },
-  duende:        { escala: 1.1, cabeca: 2.83, ajusteY: -4.42 },
+  narval:        { escala: 1.27, cabeca: 2.96, ajusteY: 6.05 },
+  tatu:          { escala: 1.29, cabeca: 3.01, ajusteY: 7.29 },
+  tamandua:      { escala: 1.10, cabeca: 2.57, ajusteY: 3.53 },
+  boto:          { escala: 1.27, cabeca: 2.96, ajusteY: 6.78 },
+  fada:          { escala: 1.12, cabeca: 2.61, ajusteY: 3.81 },
+  duende:        { escala: 1.10, cabeca: 2.57, ajusteY: 5.24 },
   golem:         { escala: 1.15, cabeca: 1.45, ajusteY: 6 }
 };
 
@@ -380,8 +382,8 @@ function preloadFase(){
   new Image().src = `imagens/base_${v}.png`;
   new Image().src = `placas/${v}.png`;
   faseAtual.config.animais.forEach(id => {
-    new Image().src = `imagens/${id}_corpo.png`;
-    new Image().src = `imagens/${id}_cabeca.png`;
+    new Image().src = `imagens/${id}_corpo.png?v=15`;
+    new Image().src = `imagens/${id}_cabeca.png?v=15`;
   });
 }
 function preloadProximaFase(){
@@ -392,8 +394,8 @@ function preloadProximaFase(){
     new Image().src = `imagens/base_${v}.png`;
     new Image().src = `placas/${v}.png`;
     FASES[proxima].animais.forEach(id => {
-      new Image().src = `imagens/${id}_corpo.png`;
-      new Image().src = `imagens/${id}_cabeca.png`;
+      new Image().src = `imagens/${id}_corpo.png?v=15`;
+      new Image().src = `imagens/${id}_cabeca.png?v=15`;
     });
   }, 3000);
 }
@@ -830,8 +832,13 @@ function iniciarRodada(){
   nomeLabel.classList.add('show');
 
   const lista = faseAtual.config.animais;
+  const novosFase = faseAtual.config.novos || [];
   const pool = lista.filter(id => id !== ultimoId);
-  const idCorreto = pool[rand(pool.length)];
+  const poolNovos = novosFase.filter(id => id !== ultimoId);
+  /* 70% das rodadas puxam um bicho NOVO da fase; o resto revisa os antigos */
+  const idCorreto = (poolNovos.length && Math.random() < 0.7)
+    ? poolNovos[rand(poolNovos.length)]
+    : pool[rand(pool.length)];
   atual = { id: idCorreto, ...ANIMAIS[idCorreto] };
   ultimoId = idCorreto;
 
@@ -850,7 +857,7 @@ function iniciarRodada(){
     bodyWrap.innerHTML = bodySVG(atual);
     aplicarSnapY();
   };
-  imgCorpo.src = `imagens/${atual.id}_corpo.png`;
+  imgCorpo.src = `imagens/${atual.id}_corpo.png?v=15`;
 
   const outrosIds = shuffle(lista.filter(id => id !== idCorreto));
   const qtd = Math.min(faseAtual.config.opcoes, lista.length);
@@ -878,7 +885,7 @@ function iniciarRodada(){
     const imgC = new Image();
     imgC.alt = ''; imgC.draggable = false;
     imgC.onload = () => { inner.textContent = ''; inner.appendChild(imgC); };
-    imgC.src = `imagens/${animal.id}_cabeca.png`;
+    imgC.src = `imagens/${animal.id}_cabeca.png?v=15`;
 
     el.appendChild(inner);
     headsEl.appendChild(el);
@@ -1215,7 +1222,7 @@ function atualizarCria(){
   imgCorpo.alt = ''; imgCorpo.draggable = false;
   imgCorpo.onload = () => { criaBody.innerHTML = ''; criaBody.appendChild(imgCorpo); aplicarSnapCria(); };
   imgCorpo.onerror = () => { criaBody.innerHTML = bodySVG(aCorpo); aplicarSnapCria(); };
-  imgCorpo.src = `imagens/${criaCorpoId}_corpo.png`;
+  imgCorpo.src = `imagens/${criaCorpoId}_corpo.png?v=15`;
 
   const aCabeca = ANIMAIS[criaCabecaId];
   criaHead.innerHTML = '';
@@ -1225,7 +1232,7 @@ function atualizarCria(){
   const imgCab = new Image();
   imgCab.alt = ''; imgCab.draggable = false;
   imgCab.onload = () => { inner.textContent = ''; inner.appendChild(imgCab); };
-  imgCab.src = `imagens/${criaCabecaId}_cabeca.png`;
+  imgCab.src = `imagens/${criaCabecaId}_cabeca.png?v=15`;
   criaHead.appendChild(inner);
 
   const nome = `${aCorpo.nome} com cabeça de ${aCabeca.nome}`;
@@ -1442,7 +1449,7 @@ function abrirAlbum(){
     const a = ANIMAIS[id];
     const tem = !!album[id];
     return `<div class="fig-card ${tem ? 'obtida' : 'faltando'}" data-bicho="${id}" role="button" tabindex="0">
-      <img src="imagens/${deacentuar(id)}_cabeca.png" alt="${a.nome}" draggable="false">
+      <img src="imagens/${deacentuar(id)}_cabeca.png?v=15" alt="${a.nome}" draggable="false">
       <div class="fig-nome">${tem ? a.nome : ''}</div>
       ${tem ? '' : '<div class="interrogacao">?</div>'}
     </div>`;
@@ -1469,7 +1476,7 @@ const ARTIGO = {
   vaca:'a', porco:'o', ovelha:'a', galinha:'a', cavalo:'o', pato:'o',
   leao:'o', elefante:'o', macaco:'o', tigre:'o', panda:'o',
   sapo:'o', golfinho:'o', baleia:'a', pinguim:'o', tartaruga:'a',
-  onca:'a', arara:'a', 'preguiça':'a', jacare:'o',
+  onca:'a', arara:'a', preguica:'a', jacare:'o',
   trex:'o', bronto:'o', dragao:'o', unicornio:'o',
   periquito:'o', pintinho:'o', cabra:'a', peru:'o', girafa:'a', zebra:'a',
   cobra:'a', gorila:'o', tubarao:'o', polvo:'o', caranguejo:'o', tucano:'o',
@@ -1506,7 +1513,7 @@ function novaRodadaQual(){
   qualPergunta.innerHTML = '<span class="falante">🔊</span> Ouça! Quem é?';
   qualOpcoesEl.innerHTML = lista.map(id => `
     <button class="qual-card" data-bicho="${id}" aria-label="Bicho misterioso">
-      <img src="imagens/${deacentuar(id)}_cabeca.png" alt="" draggable="false">
+      <img src="imagens/${deacentuar(id)}_cabeca.png?v=15" alt="" draggable="false">
     </button>`).join('');
   qualRodada = true;
   setTimeout(falarPerguntaQual, 400);
@@ -1570,8 +1577,8 @@ function preloadTudo(){
   });
 
   todosBichos.forEach(id => {
-    new Image().src = `imagens/${id}_corpo.png`;
-    new Image().src = `imagens/${id}_cabeca.png`;
+    new Image().src = `imagens/${id}_corpo.png?v=15`;
+    new Image().src = `imagens/${id}_cabeca.png?v=15`;
   });
 }
 

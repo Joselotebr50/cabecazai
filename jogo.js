@@ -187,7 +187,7 @@ const AJUSTES = {
   sereia:      { escala: 1.36, cabeca: 3.01, ajusteY: 2.95 },
   fenix:       { escala: 1.20, cabeca: 1.55, ajusteY: 8 },
   /* Leva 3 */
-  touro:         { escala: 1.12, cabeca: 2.48, ajusteY: 2.85 },
+  touro:         { escala: 1.12, cabeca: 2.88, ajusteY: -1.88 },
   ponei:         { escala: 1.25, cabeca: 2.76, ajusteY: 5.18 },
   pavao:         { escala: 1, cabeca: 1.58, ajusteY: -1.82 },
   hipopotamo:    { escala: 1.17, cabeca: 1.99, ajusteY: -0.97 },

@@ -423,6 +423,9 @@ button{font-family:inherit;font-weight:700;cursor:pointer;border:none;}
   align-items:center;
   z-index:45;
 }
+#videoGate.hidden{display:none;}   /* o portão só aparece DEPOIS do encaixe */
+#videoGate:not(.hidden){animation:surgeGate .35s cubic-bezier(.34,1.56,.64,1);}
+@keyframes surgeGate{from{opacity:0;transform:translate(-50%,-50%) translateY(18px);}to{opacity:1;transform:translate(-50%,-50%) translateY(0);}}
 .btn-video{
   padding:11px 18px;
   font-size:clamp(14px,4.2vw,17px);

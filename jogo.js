@@ -137,73 +137,73 @@ function aplicarPlaca(visual){
    ============================================================ */
 const AJUSTES = {
   /* Casa */
-  gato:        { escala: 1.05, cabeca: 1.45, ajusteY: 3 },
-  cachorro:    { escala: 1.15, cabeca: 1.45, ajusteY: 3 },
-  coelho:      { escala: 1.00, cabeca: 1.35, ajusteY: 3 },
-  passarinho:  { escala: 1.00, cabeca: 1.15, ajusteY: 6 },
-  peixinho:    { escala: 1.45, cabeca: 1.70, ajusteY: 13 },
-  hamster:     { escala: 1.00, cabeca: 1.30, ajusteY: 3 },
+  gato: { escala: 1.05, cabeca: 1.45, ajusteY: 3.0 },
+  cachorro: { escala: 1.15, cabeca: 1.45, ajusteY: 3.0 },
+  coelho: { escala: 1.0, cabeca: 1.35, ajusteY: 3.0 },
+  passarinho: { escala: 1.0, cabeca: 1.15, ajusteY: 6.0 },
+  peixinho: { escala: 1.45, cabeca: 1.7, ajusteY: 13.0 },
+  hamster: { escala: 1.0, cabeca: 1.3, ajusteY: 3.0 },
   /* Fazenda */
-  vaca:        { escala: 1.00, cabeca: 1.60, ajusteY: 3 },
-  porco:       { escala: 1.00, cabeca: 1.30, ajusteY: 3 },
-  ovelha:      { escala: 1.00, cabeca: 1.30, ajusteY: 2 },
-  galinha:     { escala: 1.00, cabeca: 0.75, ajusteY: 3 },
-  cavalo:      { escala: 1.15, cabeca: 1.55, ajusteY: 3 },
-  pato:        { escala: 1.00, cabeca: 1.15, ajusteY: 7 },
+  vaca: { escala: 1.0, cabeca: 1.6, ajusteY: 3.0 },
+  porco: { escala: 1.0, cabeca: 1.3, ajusteY: 3.0 },
+  ovelha: { escala: 1.0, cabeca: 1.3, ajusteY: 2.0 },
+  galinha: { escala: 1.0, cabeca: 0.75, ajusteY: 3.0 },
+  cavalo: { escala: 1.15, cabeca: 1.55, ajusteY: 3.0 },
+  pato: { escala: 1.0, cabeca: 1.15, ajusteY: 7.0 },
   /* Selva */
-  leao:        { escala: 1.15, cabeca: 1.95, ajusteY: 9 },
-  elefante:    { escala: 1.00, cabeca: 1.55, ajusteY: 6 },
-  macaco:      { escala: 1.00, cabeca: 1.35, ajusteY: 3 },
-  tigre:       { escala: 1.15, cabeca: 1.40, ajusteY: 2 },
-  panda:       { escala: 1.00, cabeca: 1.35, ajusteY: 2 },
+  leao: { escala: 1.15, cabeca: 1.95, ajusteY: 9.0 },
+  elefante: { escala: 1.0, cabeca: 1.55, ajusteY: 6.0 },
+  macaco: { escala: 1.0, cabeca: 1.35, ajusteY: 3.0 },
+  tigre: { escala: 1.15, cabeca: 1.4, ajusteY: 2.0 },
+  panda: { escala: 1.0, cabeca: 1.35, ajusteY: 2.0 },
   /* Água */
-  sapo:        { escala: 1.00, cabeca: 1.30, ajusteY: 5 },
-  golfinho:    { escala: 1.45, cabeca: 1.30, ajusteY: 11 },
-  baleia:      { escala: 1.30, cabeca: 1.60, ajusteY: 10 },
-  pinguim:     { escala: 1.00, cabeca: 1.15, ajusteY: 7 },
-  tartaruga:   { escala: 1.00, cabeca: 1.15, ajusteY: 3 },
+  sapo: { escala: 1.0, cabeca: 1.3, ajusteY: 5.0 },
+  golfinho: { escala: 1.45, cabeca: 1.3, ajusteY: 11.0 },
+  baleia: { escala: 1.3, cabeca: 1.6, ajusteY: 10.0 },
+  pinguim: { escala: 1.0, cabeca: 1.15, ajusteY: 7.0 },
+  tartaruga: { escala: 1.0, cabeca: 1.15, ajusteY: 3.0 },
   /* Brasil */
-  onca:        { escala: 1.15, cabeca: 1.45, ajusteY: 10 },
-  arara:       { escala: 1.15, cabeca: 1.75, ajusteY: 11 },
-  preguica:    { escala: 1.00, cabeca: 1.30, ajusteY: 12 },
-  jacare:      { escala: 1.00, cabeca: 1.60, ajusteY: 11 },
+  onca: { escala: 1.15, cabeca: 1.45, ajusteY: 10.0 },
+  arara: { escala: 1.15, cabeca: 1.75, ajusteY: 11.0 },
+  preguica: { escala: 1.0, cabeca: 1.3, ajusteY: 12.0 },
+  jacare: { escala: 1.0, cabeca: 1.6, ajusteY: 11.0 },
   /* Fantástico */
-  trex:        { escala: 1.15, cabeca: 1.75, ajusteY: 10 },
-  bronto:      { escala: 1.15, cabeca: 1.60, ajusteY: 5 },
-  dragao:      { escala: 1.15, cabeca: 1.60, ajusteY: 11 },
-  unicornio:   { escala: 1.15, cabeca: 1.85, ajusteY: 12 },
+  trex: { escala: 1.15, cabeca: 1.75, ajusteY: 10.0 },
+  bronto: { escala: 1.15, cabeca: 1.6, ajusteY: 5.0 },
+  dragao: { escala: 1.15, cabeca: 1.6, ajusteY: 11.0 },
+  unicornio: { escala: 1.15, cabeca: 1.85, ajusteY: 12.0 },
   /* Novos bichos */
-  periquito:   { escala: 1.05, cabeca: 2.45, ajusteY: 2.76 },
-  pintinho:    { escala: 1.13, cabeca: 2.50, ajusteY: 2.7 },
-  cabra:       { escala: 1.1, cabeca: 2.76, ajusteY: -3.18 },
-  peru:        { escala: 1.18, cabeca: 2.61, ajusteY: 2.83 },
-  girafa:      { escala: 1.15, cabeca: 2.68, ajusteY: 2.49 },
-  zebra:       { escala: 1.15, cabeca: 2.68, ajusteY: 5.47 },
-  cobra:       { escala: 1.00, cabeca: 2.33, ajusteY: 3.91 },
-  gorila:      { escala: 1.15, cabeca: 2.68, ajusteY: 3.16 },
-  tubarao:     { escala: 1.23, cabeca: 2.87, ajusteY: 7.04 },
-  polvo:       { escala: 1.27, cabeca: 2.96, ajusteY: 6.68 },
-  caranguejo:  { escala: 1.90, cabeca: 4.43, ajusteY: 9.78 },
-  tucano:      { escala: 1.13, cabeca: 2.64, ajusteY: 5.38 },
-  capivara:    { escala: 1.05, cabeca: 1.40, ajusteY: 3 },
-  sereia:      { escala: 1.36, cabeca: 3.17, ajusteY: 7.79 },
-  fenix:       { escala: 1.20, cabeca: 1.55, ajusteY: 8 },
+  periquito: { escala: 1.05, cabeca: 1.97, ajusteY: -2.16 },
+  pintinho: { escala: 1.13, cabeca: 2.5, ajusteY: 2.7 },
+  cabra: { escala: 1.1, cabeca: 2.76, ajusteY: -3.18 },
+  peru: { escala: 1.18, cabeca: 2.61, ajusteY: 1.86 },
+  girafa: { escala: 1.15, cabeca: 2.88, ajusteY: -5.73 },
+  zebra: { escala: 1.15, cabeca: 2.07, ajusteY: -4.36 },
+  cobra: { escala: 1.0, cabeca: 1.29, ajusteY: 1.26 },
+  gorila: { escala: 1.15, cabeca: 2.27, ajusteY: -3.5 },
+  tubarao: { escala: 1.23, cabeca: 2.72, ajusteY: 2.47 },
+  polvo: { escala: 1.27, cabeca: 2.81, ajusteY: 4.13 },
+  caranguejo: { escala: 1.9, cabeca: 4.2, ajusteY: 12.18 },
+  tucano: { escala: 1.13, cabeca: 1.73, ajusteY: 0.66 },
+  capivara: { escala: 1.05, cabeca: 1.4, ajusteY: 3.0 },
+  sereia: { escala: 1.36, cabeca: 3.01, ajusteY: 1.84 },
+  fenix: { escala: 1.2, cabeca: 2.65, ajusteY: 2.92 },
   /* Leva 3 */
-  touro:         { escala: 1.12, cabeca: 2.61, ajusteY: 4.46 },
-  ponei:         { escala: 1.25, cabeca: 2.76, ajusteY: 5.18 },
-  pavao:         { escala: 1.00, cabeca: 2.33, ajusteY: 2.83 },
-  hipopotamo:    { escala: 1.17, cabeca: 2.73, ajusteY: 4.66 },
-  rinoceronte:   { escala: 1.14, cabeca: 2.66, ajusteY: 6.75 },
-  urso:          { escala: 1.37, cabeca: 3.03, ajusteY: 7.17 },
-  cavalomarinho: { escala: 1.15, cabeca: 2.68, ajusteY: 4.81 },
-  aguaviva:      { escala: 1.20, cabeca: 1.40, ajusteY: 10 },
-  narval:        { escala: 1.27, cabeca: 2.96, ajusteY: 6.05 },
-  tatu:          { escala: 1.29, cabeca: 3.01, ajusteY: 7.29 },
-  tamandua:      { escala: 1.10, cabeca: 2.57, ajusteY: 3.53 },
-  boto:          { escala: 1.27, cabeca: 2.96, ajusteY: 6.78 },
-  fada:          { escala: 1.12, cabeca: 2.61, ajusteY: 3.81 },
-  duende:        { escala: 1.10, cabeca: 2.57, ajusteY: 5.24 },
-  golem:         { escala: 1.15, cabeca: 1.45, ajusteY: 6 }
+  touro: { escala: 1.12, cabeca: 2.88, ajusteY: -1.88 },
+  ponei: { escala: 1.25, cabeca: 2.76, ajusteY: -3.65 },
+  pavao: { escala: 1.0, cabeca: 1.58, ajusteY: -1.82 },
+  hipopotamo: { escala: 1.17, cabeca: 1.99, ajusteY: -0.97 },
+  rinoceronte: { escala: 1.14, cabeca: 2.52, ajusteY: 0.96 },
+  urso: { escala: 1.37, cabeca: 3.03, ajusteY: 7.17 },
+  cavalomarinho: { escala: 1.15, cabeca: 1.82, ajusteY: -5.56 },
+  aguaviva: { escala: 1.2, cabeca: 1.4, ajusteY: 10.0 },
+  narval: { escala: 1.27, cabeca: 2.81, ajusteY: 1.27 },
+  tatu: { escala: 1.29, cabeca: 2.85, ajusteY: 5.75 },
+  tamandua: { escala: 1.1, cabeca: 2.13, ajusteY: -2.49 },
+  boto: { escala: 1.27, cabeca: 2.81, ajusteY: 2.65 },
+  fada: { escala: 1.12, cabeca: 2.48, ajusteY: -1.1 },
+  duende: { escala: 1.1, cabeca: 2.83, ajusteY: -4.42 },
+  golem: { escala: 1.15, cabeca: 1.45, ajusteY: 6.0 },
 };
 
 function ajusteDe(id){
@@ -382,8 +382,8 @@ function preloadFase(){
   new Image().src = `imagens/base_${v}.png`;
   new Image().src = `placas/${v}.png`;
   faseAtual.config.animais.forEach(id => {
-    new Image().src = `imagens/${id}_corpo.png?v=15`;
-    new Image().src = `imagens/${id}_cabeca.png?v=15`;
+    new Image().src = `imagens/${id}_corpo.png?v=16`;
+    new Image().src = `imagens/${id}_cabeca.png?v=16`;
   });
 }
 function preloadProximaFase(){
@@ -394,8 +394,8 @@ function preloadProximaFase(){
     new Image().src = `imagens/base_${v}.png`;
     new Image().src = `placas/${v}.png`;
     FASES[proxima].animais.forEach(id => {
-      new Image().src = `imagens/${id}_corpo.png?v=15`;
-      new Image().src = `imagens/${id}_cabeca.png?v=15`;
+      new Image().src = `imagens/${id}_corpo.png?v=16`;
+      new Image().src = `imagens/${id}_cabeca.png?v=16`;
     });
   }, 3000);
 }
@@ -412,15 +412,24 @@ function preloadProximaFase(){
    ============================================================ */
 function calcularSnapY(){
   const img = bodyWrap ? bodyWrap.querySelector('img') : null;
-  if (!img || !img.naturalWidth || !img.naturalHeight) return ALVO.y;
   const sr = stage.getBoundingClientRect();
   if (sr.height === 0) return ALVO.y;
+  /* Fallback SEM img (encaixe rápido antes do onload): TODAS as imagens
+     dos bichos são quadradas (500x500), então usamos proporção 1.0 em vez
+     de jogar a cabeça no ALVO.y. Isso mata a corrida que deixava a cabeça
+     flutuando ~48px acima do corpo (o "corte reto" que aparecia no jogo). */
+  const proporcao = (img && img.naturalWidth && img.naturalHeight)
+    ? (img.naturalHeight / img.naturalWidth) : 1.0;
+  return calcularSnapYComProporcao(sr, proporcao);
+}
+
+function calcularSnapYComProporcao(sr, proporcao){
 
   /* 1. Largura visual do corpo em px (42% do stage) */
   const larguraVisualPx = sr.width * 0.42;
 
   /* 2. Altura visual = largura × proporção natural da imagem */
-  const alturaVisualPx = larguraVisualPx * (img.naturalHeight / img.naturalWidth);
+  const alturaVisualPx = larguraVisualPx * proporcao;
 
   /* 3. Aplica a escala do bicho */
   const aj = atual ? ajusteDe(atual.id) : {};
@@ -857,7 +866,7 @@ function iniciarRodada(){
     bodyWrap.innerHTML = bodySVG(atual);
     aplicarSnapY();
   };
-  imgCorpo.src = `imagens/${atual.id}_corpo.png?v=15`;
+  imgCorpo.src = `imagens/${atual.id}_corpo.png?v=16`;
 
   const outrosIds = shuffle(lista.filter(id => id !== idCorreto));
   const qtd = Math.min(faseAtual.config.opcoes, lista.length);
@@ -885,7 +894,7 @@ function iniciarRodada(){
     const imgC = new Image();
     imgC.alt = ''; imgC.draggable = false;
     imgC.onload = () => { inner.textContent = ''; inner.appendChild(imgC); };
-    imgC.src = `imagens/${animal.id}_cabeca.png?v=15`;
+    imgC.src = `imagens/${animal.id}_cabeca.png?v=16`;
 
     el.appendChild(inner);
     headsEl.appendChild(el);
@@ -1222,7 +1231,7 @@ function atualizarCria(){
   imgCorpo.alt = ''; imgCorpo.draggable = false;
   imgCorpo.onload = () => { criaBody.innerHTML = ''; criaBody.appendChild(imgCorpo); aplicarSnapCria(); };
   imgCorpo.onerror = () => { criaBody.innerHTML = bodySVG(aCorpo); aplicarSnapCria(); };
-  imgCorpo.src = `imagens/${criaCorpoId}_corpo.png?v=15`;
+  imgCorpo.src = `imagens/${criaCorpoId}_corpo.png?v=16`;
 
   const aCabeca = ANIMAIS[criaCabecaId];
   criaHead.innerHTML = '';
@@ -1232,7 +1241,7 @@ function atualizarCria(){
   const imgCab = new Image();
   imgCab.alt = ''; imgCab.draggable = false;
   imgCab.onload = () => { inner.textContent = ''; inner.appendChild(imgCab); };
-  imgCab.src = `imagens/${criaCabecaId}_cabeca.png?v=15`;
+  imgCab.src = `imagens/${criaCabecaId}_cabeca.png?v=16`;
   criaHead.appendChild(inner);
 
   const nome = `${aCorpo.nome} com cabeça de ${aCabeca.nome}`;
@@ -1449,7 +1458,7 @@ function abrirAlbum(){
     const a = ANIMAIS[id];
     const tem = !!album[id];
     return `<div class="fig-card ${tem ? 'obtida' : 'faltando'}" data-bicho="${id}" role="button" tabindex="0">
-      <img src="imagens/${deacentuar(id)}_cabeca.png?v=15" alt="${a.nome}" draggable="false">
+      <img src="imagens/${deacentuar(id)}_cabeca.png?v=16" alt="${a.nome}" draggable="false">
       <div class="fig-nome">${tem ? a.nome : ''}</div>
       ${tem ? '' : '<div class="interrogacao">?</div>'}
     </div>`;
@@ -1513,7 +1522,7 @@ function novaRodadaQual(){
   qualPergunta.innerHTML = '<span class="falante">🔊</span> Ouça! Quem é?';
   qualOpcoesEl.innerHTML = lista.map(id => `
     <button class="qual-card" data-bicho="${id}" aria-label="Bicho misterioso">
-      <img src="imagens/${deacentuar(id)}_cabeca.png?v=15" alt="" draggable="false">
+      <img src="imagens/${deacentuar(id)}_cabeca.png?v=16" alt="" draggable="false">
     </button>`).join('');
   qualRodada = true;
   setTimeout(falarPerguntaQual, 400);
@@ -1577,8 +1586,8 @@ function preloadTudo(){
   });
 
   todosBichos.forEach(id => {
-    new Image().src = `imagens/${id}_corpo.png?v=15`;
-    new Image().src = `imagens/${id}_cabeca.png?v=15`;
+    new Image().src = `imagens/${id}_corpo.png?v=16`;
+    new Image().src = `imagens/${id}_cabeca.png?v=16`;
   });
 }
 
